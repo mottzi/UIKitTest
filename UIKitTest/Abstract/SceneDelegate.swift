@@ -8,7 +8,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UIDefaultWindow
     {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        self.window = createWindow(windowScene: windowScene, controller: ViewController())
+        self.window = createWindow(windowScene: windowScene, controller: HorizontalCategoryPicker())
     }
 }
 
