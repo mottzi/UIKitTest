@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9A00A78B2CC1AE90001084BB /* HorizontalCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */; };
+		9A5781042CC6731D0060E503 /* legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5781032CC6731D0060E503 /* legacy.swift */; };
 		9A6168292CB8526F0011E756 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6168282CB8526F0011E756 /* AppDelegate.swift */; };
 		9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61682A2CB8526F0011E756 /* SceneDelegate.swift */; };
-		9A61682D2CB8526F0011E756 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61682C2CB8526F0011E756 /* ViewController.swift */; };
 		9A6168322CB852700011E756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168312CB852700011E756 /* Assets.xcassets */; };
 		9A6168352CB852700011E756 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168342CB852700011E756 /* Base */; };
 		9A6168402CB85B260011E756 /* UIDefaultWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61683F2CB85B260011E756 /* UIDefaultWindow.swift */; };
@@ -18,10 +18,10 @@
 
 /* Begin PBXFileReference section */
 		9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalCategoryPicker.swift; sourceTree = "<group>"; };
+		9A5781032CC6731D0060E503 /* legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = legacy.swift; sourceTree = "<group>"; };
 		9A6168252CB8526F0011E756 /* UIKitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIKitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A6168282CB8526F0011E756 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A61682A2CB8526F0011E756 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		9A61682C2CB8526F0011E756 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9A6168312CB852700011E756 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A6168342CB852700011E756 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A6168362CB852700011E756 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 		9A61683D2CB85A890011E756 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9A61682C2CB8526F0011E756 /* ViewController.swift */,
 				9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */,
+				9A5781032CC6731D0060E503 /* legacy.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -164,11 +164,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A61682D2CB8526F0011E756 /* ViewController.swift in Sources */,
 				9A6168292CB8526F0011E756 /* AppDelegate.swift in Sources */,
 				9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */,
 				9A6168402CB85B260011E756 /* UIDefaultWindow.swift in Sources */,
 				9A00A78B2CC1AE90001084BB /* HorizontalCategoryPicker.swift in Sources */,
+				9A5781042CC6731D0060E503 /* legacy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,9 +326,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mottzi.UIKitTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -353,9 +357,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mottzi.UIKitTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
