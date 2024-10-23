@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 class CategoryButton: UIButton
 {
@@ -23,16 +24,22 @@ class CategoryButton: UIButton
         // shape
         self.configuration = .filled()
         self.configuration?.cornerStyle = .capsule
+        self.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 8, bottom: 6, trailing: 10)
+
         self.configuration?.baseForegroundColor = .darkText
-        self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        self.configuration?.baseBackgroundColor = self.isSelected ? UIColor(named: "ButtonUnselected") : .white.withAlphaComponent(0.9) //UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        self.layer.shadowRadius = 1
+        self.layer.shadowOffset = CGSize(width: 0, height: 1.5)
+        self.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
+        self.layer.shadowOpacity = 1
         
         // title
-        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.boldSystemFont(ofSize: 16)]))
+        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .medium)]))
         
         // icon
         self.configuration?.image = UIImage(systemName: self.icon)
         self.configuration?.imagePadding = 4
-        self.configuration?.preferredSymbolConfigurationForImage = .init(font: .boldSystemFont(ofSize: 14))
+        self.configuration?.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 12, weight: .semibold))
         
         // width based on content
         self.setContentHuggingPriority(.required, for: .horizontal)
@@ -46,7 +53,7 @@ class CategoryButton: UIButton
     {
         self.isSelected.toggle()
         
-        self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        self.configuration?.baseBackgroundColor = self.isSelected ? UIColor(named: "ButtonUnselected") : .white.withAlphaComponent(0.9)
         
         parent?.sortButtons()
     }

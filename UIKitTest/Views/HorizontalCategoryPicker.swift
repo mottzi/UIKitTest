@@ -28,14 +28,10 @@ class HorizontalCategoryPicker: UIViewController
     {
         let buttons = stackview.arrangedSubviews.compactMap { $0 as? CategoryButton }
         let sortedButtons = buttons.sorted { $0.isSelected && !$1.isSelected }
-        
-        for button in buttons
-        {
-            stackview.removeArrangedSubview(button)
-        }
-                        
+             
         for button in sortedButtons
         {
+            stackview.removeArrangedSubview(button)
             stackview.addArrangedSubview(button)
         }
         
@@ -67,13 +63,13 @@ class HorizontalCategoryPicker: UIViewController
         // scroll view constraints
         scrollview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
         scrollview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        scrollview.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
-        scrollview.heightAnchor.constraint(equalTo: stackview.heightAnchor),
+        scrollview.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+        scrollview.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 20),
         
         // stack view constraints
         stackview.leadingAnchor.constraint(equalTo: scrollview.leadingAnchor, constant: 12),
         stackview.trailingAnchor.constraint(equalTo: scrollview.trailingAnchor, constant: -12),
-        stackview.topAnchor.constraint(equalTo: scrollview.topAnchor),
+        stackview.topAnchor.constraint(equalTo: scrollview.topAnchor, constant: 10),
         stackview.bottomAnchor.constraint(equalTo: scrollview.bottomAnchor),
     ]
 }

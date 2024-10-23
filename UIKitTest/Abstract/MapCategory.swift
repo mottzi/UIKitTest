@@ -7,12 +7,12 @@ struct MapCategory
     
     static let allCategories: [MapCategory] =
     [
-        MapCategory(title: "Movies", icon: "film"),
-        MapCategory(title: "Park", icon: "leaf"),
+        MapCategory(title: "Movies", icon: "movieclapper"),
+        MapCategory(title: "Park", icon: "tree"),
         MapCategory(title: "Eat", icon: "fork.knife"),
-        MapCategory(title: "Sport", icon: "sportscourt"),
+        MapCategory(title: "Sport", icon: "volleyball"),
         MapCategory(title: "Museum", icon: "building.columns"),
-        MapCategory(title: "Zoo", icon: "tortoise"),
-        MapCategory(title: "Amusement", icon: "sparkles")
+        MapCategory(title: "Zoo", icon: "bird"),
+        MapCategory(title: "Amusement", icon: "laser.burst")
     ]
 }
