@@ -63,18 +63,16 @@ class HorizontalCategoryPicker: UIViewController
         // scroll view constraints
         scrollview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
         scrollview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        scrollview.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+        // shadow fix
         scrollview.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 20),
         
-        // stack view constraints
+        // stackview.padding(.horizontal)
         stackview.leadingAnchor.constraint(equalTo: scrollview.leadingAnchor, constant: 12),
         stackview.trailingAnchor.constraint(equalTo: scrollview.trailingAnchor, constant: -12),
-        stackview.topAnchor.constraint(equalTo: scrollview.topAnchor, constant: 10),
-        stackview.bottomAnchor.constraint(equalTo: scrollview.bottomAnchor),
     ]
 }
 
 #Preview
 {
-    HorizontalCategoryPicker()
+    MapView()
 }

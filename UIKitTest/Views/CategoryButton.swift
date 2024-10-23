@@ -46,7 +46,7 @@ class CategoryButton: UIButton
         self.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         // button handler
-        self.addAction(UIAction { [weak self] _ in self?.toggleButton() }, for: .touchUpInside)
+        self.addAction(UIAction { [weak self] _ in self?.toggleButton() }, for: .touchUpInside)        
     }
     
     private func toggleButton()
