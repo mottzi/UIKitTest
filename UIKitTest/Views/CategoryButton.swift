@@ -34,7 +34,7 @@ class CategoryButton: UIButton
         self.layer.shadowOpacity = 1
         
         // title
-        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .medium)]))
+        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .body, weight: .medium)]))
         
         // icon
         self.configuration?.image = UIImage(systemName: self.icon)

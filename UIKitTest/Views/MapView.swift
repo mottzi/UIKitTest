@@ -38,12 +38,13 @@ class MapView: UIViewController
             map.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
-        // Constraints for the category picker
+        // full width picker
+        // anchorded to top
+        // hardcoded height
         NSLayoutConstraint.activate([
             picker.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             picker.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             picker.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-            picker.view.heightAnchor.constraint(equalToConstant: 35),
         ])
     }
 }

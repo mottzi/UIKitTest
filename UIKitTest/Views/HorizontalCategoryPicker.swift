@@ -60,15 +60,19 @@ class HorizontalCategoryPicker: UIViewController
     
     private lazy var controlConstraints: [NSLayoutConstraint] =
     [
-        // scroll view constraints
-        scrollview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-        scrollview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        // shadow fix
-        scrollview.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 20),
+        scrollview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        scrollview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        scrollview.topAnchor.constraint(equalTo: view.topAnchor),
+        scrollview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         
-        // stackview.padding(.horizontal)
-        stackview.leadingAnchor.constraint(equalTo: scrollview.leadingAnchor, constant: 12),
-        stackview.trailingAnchor.constraint(equalTo: scrollview.trailingAnchor, constant: -12),
+        stackview.leadingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.leadingAnchor, constant: 12),
+        stackview.trailingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.trailingAnchor, constant: -12),
+        stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
+        stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
+        
+        stackview.heightAnchor.constraint(equalTo: scrollview.frameLayoutGuide.heightAnchor),
+        
+        //stackview.widthAnchor.constraint(greaterThanOrEqualTo: scrollview.frameLayoutGuide.widthAnchor, constant: -24)
     ]
 }
 
