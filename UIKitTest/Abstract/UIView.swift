@@ -1,8 +1,10 @@
-//
-//  UIView.swift
-//  UIKitTest
-//
-//  Created by Berken Sayilir on 23.10.2024.
-//
+import UIKit
 
-import Foundation
+extension UIView
+{
+    func debug(_ color: UIColor = .systemOrange)
+    {
+        self.layer.borderWidth = 1
+        self.layer.borderColor = color.cgColor
+    }
+}
