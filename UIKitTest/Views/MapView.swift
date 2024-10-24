@@ -9,11 +9,8 @@ class MapView: UIViewController
     {
         let map = MKMapView()
         map.preferredConfiguration = MKStandardMapConfiguration()
-        map.translatesAutoresizingMaskIntoConstraints = false
         map.showsUserLocation = true
-        
-        CLLocationManager().requestWhenInUseAuthorization()
-
+//        map.translatesAutoresizingMaskIntoConstraints = false
         return map
     }()
     
@@ -28,24 +25,19 @@ class MapView: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
         setupLocation()
-
+        setupViews()
+    }
+    
+    private func setupViews()
+    {
         self.view.addSubview(map)
         self.view.addSubview(picker.view)
         
         setupConstraints()
     }
     
-    private func setupLocation()
-    {
-        location.delegate = self
-        location.desiredAccuracy = kCLLocationAccuracyBest
-        
-        location.requestWhenInUseAuthorization()
-    }
-    
-    private func centerMap(on location: CLLocation, radius: CLLocationDistance = 850, animated: Bool = true)
+    private func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)
     {
         let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
         
@@ -55,50 +47,44 @@ class MapView: UIViewController
     private func setupConstraints()
     {
         // full screen map
-        NSLayoutConstraint.activate([
-            map.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            map.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            map.topAnchor.constraint(equalTo: view.topAnchor),
-            map.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        map.frame = self.view.bounds
         
         // full width picker - anchorded to top
-        NSLayoutConstraint.activate([
-            picker.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            picker.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            picker.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-        ])
+        picker.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        picker.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
     }
 }
 
 extension MapView: CLLocationManagerDelegate 
 {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) 
+    private func setupLocation()
+    {
+        location.delegate = self
+        location.desiredAccuracy = kCLLocationAccuracyBest
+        location.requestWhenInUseAuthorization()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
+    {
+        switch status
+        {
+            case .authorizedWhenInUse, .authorizedAlways: location.requestLocation()
+            case .notDetermined: location.requestWhenInUseAuthorization()
+            default: break
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         guard let location = locations.last else { return }
         
-        centerMap(on: location)
+        centerMap(on: location, animated: false)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) 
     {
         print("Location error: \(error.localizedDescription)")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) 
-    {
-        switch status
-        {
-            case .authorizedWhenInUse, .authorizedAlways: do
-            {
-                location.requestLocation()
-            }
-            case .notDetermined: do
-            {
-                location.requestWhenInUseAuthorization()
-            }
-            default: break
-        }
     }
 }
 
