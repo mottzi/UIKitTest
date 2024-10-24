@@ -33,7 +33,7 @@ class HorizontalCategoryPicker: UIViewController
         stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
         stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
         
-        stackview.heightAnchor.constraint(equalTo: scrollview.frameLayoutGuide.heightAnchor),
+//        stackview.heightAnchor.constraint(equalTo: scrollview.heightAnchor),
         
         self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 5)
     ]
