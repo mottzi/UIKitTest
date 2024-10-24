@@ -21,6 +21,19 @@ class HorizontalCategoryPicker: UIViewController
         return stackview
     }()
     
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        
+        loadButtons(into: stackview)
+        scrollview.addSubview(stackview)
+        
+        self.view.addSubview(scrollview)
+        self.view.backgroundColor = .systemBackground
+        
+        NSLayoutConstraint.activate(controlConstraints)
+    }
+    
     private lazy var controlConstraints: [NSLayoutConstraint] =
     [
         scrollview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -32,24 +45,9 @@ class HorizontalCategoryPicker: UIViewController
         stackview.trailingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.trailingAnchor, constant: -12),
         stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
         stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
-        
-//        stackview.heightAnchor.constraint(equalTo: scrollview.heightAnchor),
-        
+                
         self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 5)
     ]
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-               
-        loadButtons(into: stackview)
-        scrollview.addSubview(stackview)
-
-        self.view.addSubview(scrollview)
-        self.view.backgroundColor = .systemBackground
-
-        NSLayoutConstraint.activate(controlConstraints)
-    }
     
     private func loadButtons(into view: UIStackView)
     {
@@ -57,9 +55,6 @@ class HorizontalCategoryPicker: UIViewController
         {
             let button = CategoryButton(title: category.title, icon: category.icon, picker: self)
             view.addArrangedSubview(button)
-            
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.bottomAnchor.constraint(equalTo: stackview.bottomAnchor, constant: 10).isActive = true
         }
     }
     
