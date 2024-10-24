@@ -1,14 +1,13 @@
 import UIKit
 import MapKit
 
-class MapView: UIViewController, MKMapViewDelegate
+class MapView: UIViewController
 {
-//    private let location = CLLocationManager()
+    private let location = CLLocationManager()
     
     private lazy var map: MKMapView =
     {
         let map = MKMapView()
-        map.delegate = self
         map.preferredConfiguration = MKStandardMapConfiguration()
         map.translatesAutoresizingMaskIntoConstraints = false
         map.showsUserLocation = true
@@ -30,35 +29,20 @@ class MapView: UIViewController, MKMapViewDelegate
     {
         super.viewDidLoad()
         
-//        setupMap()
-//        setupLocation()
-        
+        setupLocation()
+
         self.view.addSubview(map)
         self.view.addSubview(picker.view)
         
         setupConstraints()
     }
     
-//    private func setupMap()
-//    {
-//        map.delegate = self
-//        map.preferredConfiguration = MKStandardMapConfiguration()
-//        
-//        CLLocationManager().requestWhenInUseAuthorization()
-//    }
-    
-//    private func setupLocation()
-//    {
-//        location.delegate = self
-//        location.desiredAccuracy = kCLLocationAccuracyReduced
-//        
-//        location.requestWhenInUseAuthorization()
-//        location.requestLocation()
-//    }
-    
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation)
+    private func setupLocation()
     {
-        if let location = userLocation.location { centerMap(on: location, animated: false) }
+        location.delegate = self
+        location.desiredAccuracy = kCLLocationAccuracyBest
+        
+        location.requestWhenInUseAuthorization()
     }
     
     private func centerMap(on location: CLLocation, radius: CLLocationDistance = 850, animated: Bool = true)
@@ -87,45 +71,36 @@ class MapView: UIViewController, MKMapViewDelegate
     }
 }
 
-//extension MapView: MKMapViewDelegate
-//{
-//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation)
-//    {
-//        if let location = userLocation.location { centerMap(on: location, animated: false) }
-//    }
-//}
-
-//
-//extension MapView: CLLocationManagerDelegate 
-//{
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) 
-//    {
-//        guard let location = locations.last else { return }
-//        
-//        centerMap(on: location)
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) 
-//    {
-//        print("Location error: \(error.localizedDescription)")
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) 
-//    {
-//        switch status
-//        {
-//            case .authorizedWhenInUse, .authorizedAlways: do
-//            {
-//                map.showsUserLocation = true
-//            }
-//            case .notDetermined: do
-//            {
-//                location.requestWhenInUseAuthorization()
-//            }
-//            default: break
-//        }
-//    }
-//}
+extension MapView: CLLocationManagerDelegate 
+{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) 
+    {
+        guard let location = locations.last else { return }
+        
+        centerMap(on: location)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) 
+    {
+        print("Location error: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) 
+    {
+        switch status
+        {
+            case .authorizedWhenInUse, .authorizedAlways: do
+            {
+                location.requestLocation()
+            }
+            case .notDetermined: do
+            {
+                location.requestWhenInUseAuthorization()
+            }
+            default: break
+        }
+    }
+}
 
 #Preview
 {
