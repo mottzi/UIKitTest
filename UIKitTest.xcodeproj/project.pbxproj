@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9A00A78B2CC1AE90001084BB /* HorizontalCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */; };
+		9A2494DD2CCA472D00E495D3 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2494DC2CCA472D00E495D3 /* UIImage.swift */; };
 		9A37EC5A2CC90F5500621DC4 /* CategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC592CC90F5500621DC4 /* CategoryButton.swift */; };
 		9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5B2CC9124100621DC4 /* MapCategory.swift */; };
 		9A37EC5E2CC91ADB00621DC4 /* UIAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalCategoryPicker.swift; sourceTree = "<group>"; };
+		9A2494DC2CCA472D00E495D3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		9A37EC592CC90F5500621DC4 /* CategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryButton.swift; sourceTree = "<group>"; };
 		9A37EC5B2CC9124100621DC4 /* MapCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategory.swift; sourceTree = "<group>"; };
 		9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAnimation.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 				9A37EC612CC99EA600621DC4 /* UIView.swift */,
 				9A37EC632CC9A6C800621DC4 /* UIFont.swift */,
 				9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */,
+				9A2494DC2CCA472D00E495D3 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -177,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */,
+				9A2494DD2CCA472D00E495D3 /* UIImage.swift in Sources */,
 				9A37EC602CC93D4A00621DC4 /* MapView.swift in Sources */,
 				9A6168292CB8526F0011E756 /* AppDelegate.swift in Sources */,
 				9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */,

@@ -36,10 +36,12 @@ class CategoryButton: UIButton
         self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .subheadline, weight: .medium)]))
         
         // icon
-        self.configuration?.image = UIImage(systemName: self.icon)
-        self.configuration?.imagePadding = 4
-        self.configuration?.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 11, weight: .semibold))
+        let originalImage = UIImage(systemName: self.icon, withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
+        let resizedIcon = originalImage.resize(to: CGSize(width: 18, height: 18))
         
+        self.configuration?.image = resizedIcon
+        self.configuration?.imagePadding = 4
+
         // width based on content
         self.setContentHuggingPriority(.required, for: .horizontal)
         self.setContentCompressionResistancePriority(.required, for: .horizontal)
