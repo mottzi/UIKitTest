@@ -5,13 +5,13 @@ class CategoryButton: UIButton
     let title: String
     let icon: String
     
-    weak var parent: HorizontalCategoryPicker?
+    weak var picker: HorizontalCategoryPicker?
     
-    init(title: String, icon: String, parent: HorizontalCategoryPicker?)
+    init(title: String, icon: String, picker: HorizontalCategoryPicker?)
     {
         self.title = title
         self.icon = icon
-        self.parent = parent
+        self.picker = picker
         
         super.init(frame: .zero)
         
@@ -56,7 +56,8 @@ class CategoryButton: UIButton
         
         self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
         
-        parent?.sortButtons()
+        picker?.sortButtons()
+        picker?.haptics.selectionChanged()
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

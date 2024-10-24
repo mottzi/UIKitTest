@@ -2,7 +2,7 @@ import UIKit
 
 extension UIFont 
 {
-    static func preferredFont(for style: TextStyle, weight: Weight, italic: Bool = false) -> UIFont 
+    static func preferredFont(for style: TextStyle = .body, weight: Weight = .regular, italic: Bool = false) -> UIFont
     {
         // Get the style's default pointSize
         let traits = UITraitCollection(preferredContentSizeCategory: .large)

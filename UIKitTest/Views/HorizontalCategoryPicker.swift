@@ -2,6 +2,8 @@ import UIKit
 
 class HorizontalCategoryPicker: UIViewController
 {
+    public let haptics = UISelectionFeedbackGenerator()
+
     private lazy var scrollview: UIScrollView =
     {
         let scrollview = UIScrollView()
@@ -53,7 +55,7 @@ class HorizontalCategoryPicker: UIViewController
     {
         for category in MapCategory.allCategories
         {
-            let button = CategoryButton(title: category.title, icon: category.icon, parent: self)
+            let button = CategoryButton(title: category.title, icon: category.icon, picker: self)
             view.addArrangedSubview(button)
             
             button.translatesAutoresizingMaskIntoConstraints = false
