@@ -8,7 +8,7 @@ extension UIView
                        delay: 0,
                        usingSpringWithDamping: 0.8,
                        initialSpringVelocity: 0,
-                       options: .curveEaseIn,
+                       options: [.curveEaseIn, .allowUserInteraction],
                        animations: animations)
     }
 }

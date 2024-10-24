@@ -10,7 +10,7 @@
 		9A00A78B2CC1AE90001084BB /* HorizontalCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */; };
 		9A37EC5A2CC90F5500621DC4 /* CategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC592CC90F5500621DC4 /* CategoryButton.swift */; };
 		9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5B2CC9124100621DC4 /* MapCategory.swift */; };
-		9A37EC5E2CC91ADB00621DC4 /* BouncyAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5D2CC91ADB00621DC4 /* BouncyAnimation.swift */; };
+		9A37EC5E2CC91ADB00621DC4 /* UIAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */; };
 		9A37EC602CC93D4A00621DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5F2CC93D4A00621DC4 /* MapView.swift */; };
 		9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC612CC99EA600621DC4 /* UIView.swift */; };
 		9A37EC642CC9A6C800621DC4 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC632CC9A6C800621DC4 /* UIFont.swift */; };
@@ -24,7 +24,7 @@
 		9A00A78A2CC1AE90001084BB /* HorizontalCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalCategoryPicker.swift; sourceTree = "<group>"; };
 		9A37EC592CC90F5500621DC4 /* CategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryButton.swift; sourceTree = "<group>"; };
 		9A37EC5B2CC9124100621DC4 /* MapCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategory.swift; sourceTree = "<group>"; };
-		9A37EC5D2CC91ADB00621DC4 /* BouncyAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncyAnimation.swift; sourceTree = "<group>"; };
+		9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAnimation.swift; sourceTree = "<group>"; };
 		9A37EC5F2CC93D4A00621DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		9A37EC612CC99EA600621DC4 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		9A37EC632CC9A6C800621DC4 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
@@ -47,6 +47,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A2494DB2CCA3B0D00E495D3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9A37EC612CC99EA600621DC4 /* UIView.swift */,
+				9A37EC632CC9A6C800621DC4 /* UIFont.swift */,
+				9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		9A61681C2CB8526F0011E756 = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				9A61683C2CB85A790011E756 /* Abstract */,
+				9A2494DB2CCA3B0D00E495D3 /* Extensions */,
 				9A61683D2CB85A890011E756 /* Views */,
 				9A6168312CB852700011E756 /* Assets.xcassets */,
 				9A6168332CB852700011E756 /* LaunchScreen.storyboard */,
@@ -81,9 +92,6 @@
 				9A6168282CB8526F0011E756 /* AppDelegate.swift */,
 				9A61682A2CB8526F0011E756 /* SceneDelegate.swift */,
 				9A37EC5B2CC9124100621DC4 /* MapCategory.swift */,
-				9A37EC5D2CC91ADB00621DC4 /* BouncyAnimation.swift */,
-				9A37EC612CC99EA600621DC4 /* UIView.swift */,
-				9A37EC632CC9A6C800621DC4 /* UIFont.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -173,7 +181,7 @@
 				9A6168292CB8526F0011E756 /* AppDelegate.swift in Sources */,
 				9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */,
 				9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */,
-				9A37EC5E2CC91ADB00621DC4 /* BouncyAnimation.swift in Sources */,
+				9A37EC5E2CC91ADB00621DC4 /* UIAnimation.swift in Sources */,
 				9A37EC5A2CC90F5500621DC4 /* CategoryButton.swift in Sources */,
 				9A00A78B2CC1AE90001084BB /* HorizontalCategoryPicker.swift in Sources */,
 				9A37EC642CC9A6C800621DC4 /* UIFont.swift in Sources */,

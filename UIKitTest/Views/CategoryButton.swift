@@ -23,10 +23,10 @@ class CategoryButton: UIButton
         // shape
         self.configuration = .filled()
         self.configuration?.cornerStyle = .capsule
-        self.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 8, bottom: 6, trailing: 10)
+        self.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 10)
 
         self.configuration?.baseForegroundColor = .darkText
-        self.configuration?.baseBackgroundColor = self.isSelected ? UIColor(named: "ButtonUnselected") : .white.withAlphaComponent(0.9) //UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
         self.layer.shadowRadius = 1
         self.layer.shadowOffset = CGSize(width: 0, height: 1.5)
         self.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
@@ -52,10 +52,15 @@ class CategoryButton: UIButton
     {
         self.isSelected.toggle()
         
-        self.configuration?.baseBackgroundColor = self.isSelected ? UIColor(named: "ButtonUnselected") : .white.withAlphaComponent(0.9)
+        self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
         
         parent?.sortButtons()
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
+#Preview
+{
+    MapView()
 }
