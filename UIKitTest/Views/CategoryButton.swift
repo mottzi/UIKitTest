@@ -37,7 +37,7 @@ class CategoryButton: UIButton
         
         // icon
         let originalImage = UIImage(systemName: self.icon, withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
-        let resizedIcon = originalImage.resize(to: CGSize(width: 18, height: 18))
+        let resizedIcon = originalImage.scaledToFit(height: 18)
         
         self.configuration?.image = resizedIcon
         self.configuration?.imagePadding = 4

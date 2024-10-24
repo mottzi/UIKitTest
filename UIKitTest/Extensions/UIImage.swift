@@ -1,14 +1,19 @@
 import UIKit
 
-extension UIImage
+extension UIImage 
 {
-    func resize(to size: CGSize) -> UIImage
+    func scaledToFit(height: CGFloat) -> UIImage?
     {
-        let renderer = UIGraphicsImageRenderer(size: size)
+        let aspectRatio = self.size.width / self.size.height
+        let newSize = CGSize(width: height * aspectRatio, height: height)
         
-        return renderer.image 
-        { _ in
-            self.draw(in: CGRect(origin: .zero, size: size))
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        
+        let newImage = renderer.image
+        { context in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
+        
+        return newImage
     }
 }
