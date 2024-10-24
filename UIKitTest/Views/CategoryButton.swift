@@ -1,5 +1,4 @@
 import UIKit
-import SwiftUI
 
 class CategoryButton: UIButton
 {
@@ -34,12 +33,12 @@ class CategoryButton: UIButton
         self.layer.shadowOpacity = 1
         
         // title
-        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .body, weight: .medium)]))
+        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .subheadline, weight: .medium)]))
         
         // icon
         self.configuration?.image = UIImage(systemName: self.icon)
         self.configuration?.imagePadding = 4
-        self.configuration?.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 12, weight: .semibold))
+        self.configuration?.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 11, weight: .semibold))
         
         // width based on content
         self.setContentHuggingPriority(.required, for: .horizontal)

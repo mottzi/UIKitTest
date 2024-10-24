@@ -2,45 +2,6 @@ import UIKit
 
 class HorizontalCategoryPicker: UIViewController
 {
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-               
-        loadButtons(into: stackview)
-        scrollview.addSubview(stackview)
-
-        self.view.addSubview(scrollview)
-        self.view.backgroundColor = .systemBackground
-
-        NSLayoutConstraint.activate(controlConstraints)
-    }
-    
-    private func loadButtons(into view: UIStackView)
-    {
-        for category in MapCategory.allCategories
-        {
-            let button = CategoryButton(title: category.title, icon: category.icon, parent: self)
-            view.addArrangedSubview(button)
-        }
-    }
-    
-    public func sortButtons()
-    {
-        let buttons = stackview.arrangedSubviews.compactMap { $0 as? CategoryButton }
-        let sortedButtons = buttons.sorted { $0.isSelected && !$1.isSelected }
-             
-        for button in sortedButtons
-        {
-            stackview.removeArrangedSubview(button)
-            stackview.addArrangedSubview(button)
-        }
-        
-        UIView.bouncyAnimation()
-        {
-            self.stackview.layoutIfNeeded()
-        }
-    }
-    
     private lazy var scrollview: UIScrollView =
     {
         let scrollview = UIScrollView()
@@ -72,8 +33,50 @@ class HorizontalCategoryPicker: UIViewController
         
         stackview.heightAnchor.constraint(equalTo: scrollview.frameLayoutGuide.heightAnchor),
         
-        //stackview.widthAnchor.constraint(greaterThanOrEqualTo: scrollview.frameLayoutGuide.widthAnchor, constant: -24)
+        self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 5)
     ]
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+               
+        loadButtons(into: stackview)
+        scrollview.addSubview(stackview)
+
+        self.view.addSubview(scrollview)
+        self.view.backgroundColor = .systemBackground
+
+        NSLayoutConstraint.activate(controlConstraints)
+    }
+    
+    private func loadButtons(into view: UIStackView)
+    {
+        for category in MapCategory.allCategories
+        {
+            let button = CategoryButton(title: category.title, icon: category.icon, parent: self)
+            view.addArrangedSubview(button)
+            
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.bottomAnchor.constraint(equalTo: stackview.bottomAnchor, constant: 10).isActive = true
+        }
+    }
+    
+    public func sortButtons()
+    {
+        let buttons = stackview.arrangedSubviews.compactMap { $0 as? CategoryButton }
+        let sortedButtons = buttons.sorted { $0.isSelected && !$1.isSelected }
+             
+        for button in sortedButtons
+        {
+            stackview.removeArrangedSubview(button)
+            stackview.addArrangedSubview(button)
+        }
+        
+        UIView.bouncyAnimation()
+        {
+            self.stackview.layoutIfNeeded()
+        }
+    }
 }
 
 #Preview
