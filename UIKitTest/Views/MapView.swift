@@ -4,13 +4,12 @@ import MapKit
 class MapView: UIViewController
 {
     private let location = CLLocationManager()
-    
+        
     private lazy var map: MKMapView =
     {
         let map = MKMapView()
         map.preferredConfiguration = MKStandardMapConfiguration()
         map.showsUserLocation = true
-//        map.translatesAutoresizingMaskIntoConstraints = false
         return map
     }()
     
@@ -48,7 +47,8 @@ class MapView: UIViewController
     {
         // full screen map
         map.frame = self.view.bounds
-        
+        map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
         // full width picker - anchorded to top
         picker.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         picker.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -58,23 +58,18 @@ class MapView: UIViewController
 
 extension MapView: CLLocationManagerDelegate 
 {
-    private func setupLocation()
-    {
-        location.delegate = self
-        location.desiredAccuracy = kCLLocationAccuracyBest
-        location.requestWhenInUseAuthorization()
-    }
-    
+    // authorization callback
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
     {
         switch status
         {
-            case .authorizedWhenInUse, .authorizedAlways: location.requestLocation()
+            case .authorizedWhenInUse: location.requestLocation()
             case .notDetermined: location.requestWhenInUseAuthorization()
             default: break
         }
     }
     
+    // location callback
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         guard let location = locations.last else { return }
@@ -85,6 +80,12 @@ extension MapView: CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) 
     {
         print("Location error: \(error.localizedDescription)")
+    }
+    
+    private func setupLocation()
+    {
+        location.delegate = self
+        location.desiredAccuracy = kCLLocationAccuracyBest
     }
 }
 
