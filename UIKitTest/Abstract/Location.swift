@@ -39,22 +39,18 @@ extension MapView: CLLocationManagerDelegate
         
         switch self.location.locationRequestReason
         {
-            case .idle: break
+            case .idle: return
             case .centerMap: centerMap(on: location, animated: false)
             case .centerMapAnimated: centerMap(on: location, animated: true)
         }
         
-        if self.location.locationRequestReason != .idle
-        {
-            print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")
-        }
-        
+        print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")
         self.location.locationRequestReason = .idle
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
-        print("Location error: \(error.localizedDescription)")
+        print("Location error: \(error.localizedDescription) -> \(manager.authorizationStatus)")
     }
     
     func setupLocation()

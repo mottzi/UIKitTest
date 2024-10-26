@@ -12,7 +12,7 @@ class HorizontalCategoryPicker: UIViewController
         return scrollview
     }()
     
-    private lazy var stackview: UIStackView =
+    lazy var stackview: UIStackView =
     {
         let stackview = UIStackView()
         stackview.axis = .horizontal
@@ -29,7 +29,6 @@ class HorizontalCategoryPicker: UIViewController
         scrollview.addSubview(stackview)
         
         self.view.addSubview(scrollview)
-        self.view.backgroundColor = .systemBackground
         
         NSLayoutConstraint.activate(controlConstraints)
     }
@@ -44,7 +43,7 @@ class HorizontalCategoryPicker: UIViewController
         stackview.leadingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.leadingAnchor, constant: 12),
         stackview.trailingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.trailingAnchor, constant: -12),
         stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
-        stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
+//        stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
                 
         self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 5)
     ]
@@ -68,11 +67,13 @@ class HorizontalCategoryPicker: UIViewController
             stackview.removeArrangedSubview(button)
             stackview.addArrangedSubview(button)
         }
-        
-        UIView.bouncyAnimation()
-        {
-            self.stackview.layoutIfNeeded()
-        }
+
+        self.stackview.layoutIfNeeded()
+    }
+    
+    public func resetPickerScroll()
+    {
+        scrollview.setContentOffset(.zero, animated: false)
     }
 }
 
