@@ -9,6 +9,7 @@ class MapView: UIViewController
     private lazy var map: MKMapView =
     {
         let map = MKMapView()
+        map.delegate = self
         map.preferredConfiguration = MKStandardMapConfiguration()
         map.showsUserLocation = true
         return map
@@ -55,10 +56,13 @@ class MapView: UIViewController
     
     private func setupViews()
     {
+        self.addChild(picker)
+        
         self.view.addSubview(map)
         self.view.addSubview(picker.view)
                 
         setupConstraints()
+        picker.didMove(toParent: self)
     }
     
     public func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)
@@ -78,6 +82,18 @@ class MapView: UIViewController
         picker.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         picker.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+    }
+}
+
+extension MapView: MKMapViewDelegate
+{
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+    {
+        UIView.bouncyAnimation()
+        {
+            self.picker.sortButtons()
+            self.picker.resetPickerScroll()
+        }
     }
 }
 

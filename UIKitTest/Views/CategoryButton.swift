@@ -56,7 +56,7 @@ class CategoryButton: UIButton
         
         self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
         
-        picker?.sortButtons()
+        // picker?.sortButtons()
         picker?.haptics.selectionChanged()
     }
     
