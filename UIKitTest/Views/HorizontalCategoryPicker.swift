@@ -9,10 +9,11 @@ class HorizontalCategoryPicker: UIViewController
         let scrollview = UIScrollView()
         scrollview.showsHorizontalScrollIndicator = false
         scrollview.translatesAutoresizingMaskIntoConstraints = false
+        scrollview.layer.masksToBounds = false
         return scrollview
     }()
     
-    lazy var stackview: UIStackView =
+    private lazy var stackview: UIStackView =
     {
         let stackview = UIStackView()
         stackview.axis = .horizontal
@@ -45,7 +46,7 @@ class HorizontalCategoryPicker: UIViewController
         stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
 //        stackview.bottomAnchor.constraint(equalTo: scrollview.contentLayoutGuide.bottomAnchor),
                 
-        self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 5)
+        self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 0)
     ]
     
     private func loadButtons(into view: UIStackView)
@@ -68,12 +69,29 @@ class HorizontalCategoryPicker: UIViewController
             stackview.addArrangedSubview(button)
         }
 
-        self.stackview.layoutIfNeeded()
+        stackview.layoutIfNeeded()
     }
     
     public func resetPickerScroll()
     {
         scrollview.setContentOffset(.zero, animated: false)
+    }
+    
+    public func sortAndReset(animated: Bool = true)
+    {
+        if animated
+        {
+            UIView.bouncyAnimation()
+            {
+                self.sortButtons()
+                self.resetPickerScroll()
+            }
+        }
+        else
+        {
+            sortButtons()
+            resetPickerScroll()
+        }
     }
 }
 

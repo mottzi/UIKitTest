@@ -1,10 +1,10 @@
 import UIKit
 import MapKit
 
-class MapView: UIViewController
+class MapView: UIViewController, MKMapViewDelegate
 {
     let location = LocationManager()
-    var enteredForeground = 0
+    var isCenteredOnLocation = true
        
     private lazy var map: MKMapView =
     {
@@ -12,6 +12,7 @@ class MapView: UIViewController
         map.delegate = self
         map.preferredConfiguration = MKStandardMapConfiguration()
         map.showsUserLocation = true
+//        map.showsCompass = false
         return map
     }()
     
@@ -23,49 +24,44 @@ class MapView: UIViewController
         return picker
     }()
     
+    lazy var controls: MapControls =
+    {
+        let controls = MapControls(map: self)
+        controls.view.translatesAutoresizingMaskIntoConstraints = false
+        return controls
+    }()
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         setupLocation()
         setupViews()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(onEnterForeground),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-    }
-    
-    @objc private func onEnterForeground()
-    {
-        if enteredForeground > 0
-        {
-            print("App has entered the foreground.")
-            location.requestLocation(reason: .centerMapAnimated)
-        }
-        else
-        {
-            print("App has launched.")
-        }
-        
-        enteredForeground += 1
-    }
-    
-    deinit
-    {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     private func setupViews()
     {
         self.addChild(picker)
+        self.addChild(controls)
         
         self.view.addSubview(map)
         self.view.addSubview(picker.view)
-                
+        self.view.addSubview(controls.view)
+
         setupConstraints()
+        
         picker.didMove(toParent: self)
+        controls.didMove(toParent: self)
     }
     
-    public func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+    {
+        picker.sortAndReset()
+        
+        self.isCenteredOnLocation = false
+        controls.updateIcon()
+    }
+    
+    func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)
     {
         let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
         
@@ -82,18 +78,10 @@ class MapView: UIViewController
         picker.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         picker.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
-    }
-}
-
-extension MapView: MKMapViewDelegate
-{
-    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
-    {
-        UIView.bouncyAnimation()
-        {
-            self.picker.sortButtons()
-            self.picker.resetPickerScroll()
-        }
+        
+        // controls in bottom right corner
+        controls.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        controls.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
     }
 }
 

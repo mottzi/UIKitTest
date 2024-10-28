@@ -17,6 +17,7 @@ enum LocationRequestReason: String
     case idle
     case centerMap
     case centerMapAnimated
+    case locationButtonTapped
 }
 
 extension MapView: CLLocationManagerDelegate
@@ -40,8 +41,18 @@ extension MapView: CLLocationManagerDelegate
         switch self.location.locationRequestReason
         {
             case .idle: return
-            case .centerMap: centerMap(on: location, animated: false)
-            case .centerMapAnimated: centerMap(on: location, animated: true)
+            case .centerMap: 
+                centerMap(on: location, animated: false)
+                self.isCenteredOnLocation = true
+                self.controls.updateIcon()
+            case .centerMapAnimated:
+                centerMap(on: location, animated: true)
+                self.isCenteredOnLocation = true
+                self.controls.updateIcon()
+            case .locationButtonTapped:
+                centerMap(on: location, animated: true)
+                self.isCenteredOnLocation = true
+                self.controls.updateIcon()
         }
         
         print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")
