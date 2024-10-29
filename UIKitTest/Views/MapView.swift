@@ -12,7 +12,6 @@ class MapView: UIViewController, MKMapViewDelegate
         map.delegate = self
         map.preferredConfiguration = MKStandardMapConfiguration()
         map.showsUserLocation = true
-//        map.showsCompass = false
         return map
     }()
     
@@ -68,6 +67,21 @@ class MapView: UIViewController, MKMapViewDelegate
         map.setRegion(region, animated: animated)
     }
     
+    func togglePitch()
+    {
+        controls.pitchButton.isSelected.toggle()
+        controls.pitchButton.configuration?.image = UIImage(systemName: controls.pitchButton.isSelected ? "view.3d" : "view.2d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
+        
+        let camera = MKMapCamera(
+            lookingAtCenter: map.centerCoordinate,
+            fromDistance: map.camera.centerCoordinateDistance,
+            pitch: controls.pitchButton.isSelected ? 70 : 0,
+            heading: map.camera.heading
+        )
+        
+        map.setCamera(camera, animated: true)
+    }
+    
     private func setupConstraints()
     {
         // full screen map
@@ -80,7 +94,7 @@ class MapView: UIViewController, MKMapViewDelegate
         picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
         
         // controls in bottom right corner
-        controls.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        controls.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         controls.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
     }
 }

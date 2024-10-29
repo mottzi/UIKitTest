@@ -19,10 +19,10 @@ class MapControls: UIViewController
         stack.axis = .vertical
         stack.alignment = .center
         stack.spacing = 10
-        stack.distribution = .equalSpacing
         stack.translatesAutoresizingMaskIntoConstraints = false
         
         stack.addArrangedSubview(locationButton)
+        stack.addArrangedSubview(pitchButton)
         stack.addArrangedSubview(compassButton)
         
         return stack
@@ -35,13 +35,14 @@ class MapControls: UIViewController
         button.configuration?.background.cornerRadius = 25
         
         button.configuration?.baseForegroundColor = .systemBlue
-        button.configuration?.baseBackgroundColor = UIColor(named: button.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        button.configuration?.baseBackgroundColor = .buttonUnselected
         button.layer.shadowRadius = 1.5
         button.layer.shadowOffset = CGSize(width: 0, height: 1)
         button.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
         button.layer.shadowOpacity = 1
         
-        button.configuration?.image = UIImage(systemName: "location.fill")
+        button.configuration?.image = UIImage(systemName: "location.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
+        button.configuration?.preferredSymbolConfigurationForImage = .init(pointSize: 14)
         
         let action = UIAction 
         { [weak self] _ in
@@ -56,9 +57,31 @@ class MapControls: UIViewController
         return button
     }()
     
+    lazy var pitchButton: UIButton =
+    {
+        let button = UIButton()
+        button.configuration = .filled()
+        button.configuration?.background.cornerRadius = 25
+        
+        button.configuration?.baseForegroundColor = .systemBlue
+        button.configuration?.baseBackgroundColor = .buttonUnselected
+        button.layer.shadowRadius = 1.5
+        button.layer.shadowOffset = CGSize(width: 0, height: 1)
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
+        button.layer.shadowOpacity = 1
+        
+        button.configuration?.image = UIImage(systemName: "view.2d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
+        button.configuration?.preferredSymbolConfigurationForImage = .init(pointSize: 14)
+        
+        button.addAction(UIAction{ [weak self] _ in self?.mapView?.togglePitch() }, for: .touchUpInside)
+        
+        return button
+    }()
+    
     lazy var compassButton: MKCompassButton =
     {
-        let compass = MKCompassButton(mapView: mapView?.map)
+        let compass = MKCompassButton()
+        compass.mapView = mapView?.map
         compass.compassVisibility = .visible
         compass.layer.shadowRadius = 1.5
         compass.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -80,17 +103,18 @@ class MapControls: UIViewController
         stack.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stack.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             
-        locationButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        locationButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        locationButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
+        locationButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        compassButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        pitchButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
+        pitchButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     
     func updateIcon()
     {
-        guard let map = mapView else { return }
+        guard let mapView else { return }
         
-        locationButton.configuration?.baseForegroundColor = map.isCenteredOnLocation ? .systemBlue : .systemGray
+        locationButton.configuration?.baseForegroundColor = mapView.isCenteredOnLocation ? .systemBlue : .systemGray
     }
 }
 
