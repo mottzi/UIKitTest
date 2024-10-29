@@ -16,9 +16,9 @@ class MapView: UIViewController, MKMapViewDelegate
         return map
     }()
     
-    private lazy var picker: HorizontalCategoryPicker =
+    private lazy var picker: MapCategoryPicker =
     {
-        let picker = HorizontalCategoryPicker()
+        let picker = MapCategoryPicker()
         picker.view.translatesAutoresizingMaskIntoConstraints = false
         picker.view.backgroundColor = .clear
         return picker

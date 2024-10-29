@@ -5,9 +5,9 @@ class CategoryButton: UIButton
     let title: String
     let icon: String
     
-    weak var picker: HorizontalCategoryPicker?
+    weak var picker: MapCategoryPicker?
     
-    init(title: String, icon: String, picker: HorizontalCategoryPicker?)
+    init(title: String, icon: String, picker: MapCategoryPicker?)
     {
         self.title = title
         self.icon = icon

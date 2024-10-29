@@ -1,6 +1,6 @@
 import UIKit
 
-class HorizontalCategoryPicker: UIViewController
+class MapCategoryPicker: UIViewController
 {
     public let haptics = UISelectionFeedbackGenerator()
 
