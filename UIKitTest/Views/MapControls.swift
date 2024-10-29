@@ -17,12 +17,17 @@ class MapControls: UIViewController
     {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 6
+        stack.alignment = .center
+        stack.spacing = 10
+        stack.distribution = .equalSpacing
         stack.translatesAutoresizingMaskIntoConstraints = false
+        
         stack.addArrangedSubview(locationButton)
+        stack.addArrangedSubview(compassButton)
+        
         return stack
     }()
-    
+
     lazy var locationButton: UIButton =
     {
         let button = UIButton()
@@ -38,9 +43,30 @@ class MapControls: UIViewController
         
         button.configuration?.image = UIImage(systemName: "location.fill")
         
-        button.addAction(UIAction { [weak self] _ in self?.mapView?.location.requestLocation(reason: .locationButtonTapped) }, for: .touchUpInside)
+        let action = UIAction 
+        { [weak self] _ in
+            self?.mapView?.location.requestLocation(reason: .locationButtonTapped)
+            
+            guard let lastLocation = self?.mapView?.location.location else { return }
+            self?.mapView?.centerMap(on: lastLocation)
+        }
+        
+        button.addAction(action, for: .touchUpInside)
 
         return button
+    }()
+    
+    lazy var compassButton: MKCompassButton =
+    {
+        let compass = MKCompassButton(mapView: mapView?.map)
+        compass.compassVisibility = .visible
+        compass.layer.shadowRadius = 1.5
+        compass.layer.shadowOffset = CGSize(width: 0, height: 1)
+        compass.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
+        compass.layer.shadowOpacity = 1
+        compass.alpha = 0.9
+        compass.overrideUserInterfaceStyle = .light
+        return compass
     }()
     
     override func viewDidLoad()
@@ -49,14 +75,15 @@ class MapControls: UIViewController
         
         self.view.addSubview(stack)
     
-    
         stack.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         stack.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stack.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stack.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    
+            
         locationButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         locationButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        compassButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
     }
     
     func updateIcon()
@@ -65,4 +92,9 @@ class MapControls: UIViewController
         
         locationButton.configuration?.baseForegroundColor = map.isCenteredOnLocation ? .systemBlue : .systemGray
     }
+}
+
+#Preview
+{
+    MapView()
 }

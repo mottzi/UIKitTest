@@ -6,7 +6,7 @@ class MapView: UIViewController, MKMapViewDelegate
     let location = LocationManager()
     var isCenteredOnLocation = true
        
-    private lazy var map: MKMapView =
+    lazy var map: MKMapView =
     {
         let map = MKMapView()
         map.delegate = self
