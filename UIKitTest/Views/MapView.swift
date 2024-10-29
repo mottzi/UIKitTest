@@ -4,7 +4,6 @@ import MapKit
 class MapView: UIViewController, MKMapViewDelegate
 {
     let location = LocationManager()
-    var isCenteredOnLocation = true
        
     lazy var map: MKMapView =
     {
@@ -55,9 +54,7 @@ class MapView: UIViewController, MKMapViewDelegate
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
         picker.sortAndReset()
-        
-        self.isCenteredOnLocation = false
-        controls.updateIcon()
+        controls.updateIcon(isMapCentered: false)
     }
     
     func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)

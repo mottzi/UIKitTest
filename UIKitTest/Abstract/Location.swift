@@ -43,16 +43,10 @@ extension MapView: CLLocationManagerDelegate
             case .idle: return
             case .centerMap: 
                 centerMap(on: location, animated: false)
-                self.isCenteredOnLocation = true
-                self.controls.updateIcon()
-            case .centerMapAnimated:
+                controls.updateIcon(isMapCentered: true)
+            case .centerMapAnimated, .locationButtonTapped:
                 centerMap(on: location, animated: true)
-                self.isCenteredOnLocation = true
-                self.controls.updateIcon()
-            case .locationButtonTapped:
-                centerMap(on: location, animated: true)
-                self.isCenteredOnLocation = true
-                self.controls.updateIcon()
+                controls.updateIcon(isMapCentered: true)
         }
         
         print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")

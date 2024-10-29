@@ -50,6 +50,7 @@ class MapControls: UIViewController
             
             guard let lastLocation = self?.mapView?.location.location else { return }
             self?.mapView?.centerMap(on: lastLocation)
+            self?.mapView?.controls.updateIcon(isMapCentered: true)
         }
         
         button.addAction(action, for: .touchUpInside)
@@ -110,11 +111,11 @@ class MapControls: UIViewController
         pitchButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     
-    func updateIcon()
+    func updateIcon(isMapCentered: Bool)
     {
         guard let mapView else { return }
         
-        locationButton.configuration?.baseForegroundColor = mapView.isCenteredOnLocation ? .systemBlue : .systemGray
+        locationButton.configuration?.baseForegroundColor = isMapCentered ? .systemBlue : .systemGray
     }
 }
 
