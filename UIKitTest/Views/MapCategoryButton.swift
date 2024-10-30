@@ -1,6 +1,6 @@
 import UIKit
 
-class CategoryButton: UIButton
+class MapCategoryButton: UIButton
 {
     let title: String
     let icon: String
