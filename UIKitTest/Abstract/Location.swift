@@ -3,7 +3,7 @@ import CoreLocation
 
 class LocationManager: CLLocationManager
 {
-    var locationRequestReason: LocationRequestReason = .centerMap
+    var locationRequestReason: LocationRequestReason = .centerMapOnLaunch
     
     func requestLocation(reason: LocationRequestReason)
     {
@@ -15,7 +15,7 @@ class LocationManager: CLLocationManager
 enum LocationRequestReason: String
 {
     case idle
-    case centerMap
+    case centerMapOnLaunch
     case centerMapAnimated
     case locationButtonTapped
 }
@@ -27,7 +27,7 @@ extension MapView: CLLocationManagerDelegate
     {
         switch status
         {
-            case .authorizedWhenInUse: location.requestLocation(reason: .centerMap)
+            case .authorizedWhenInUse: location.requestLocation(reason: .centerMapOnLaunch)
             case .notDetermined: location.requestWhenInUseAuthorization()
             default: break
         }
@@ -41,12 +41,8 @@ extension MapView: CLLocationManagerDelegate
         switch self.location.locationRequestReason
         {
             case .idle: return
-            case .centerMap: 
-                centerMap(on: location, animated: false)
-                controls.updateIcon(isMapCentered: true)
-            case .centerMapAnimated, .locationButtonTapped:
-                centerMap(on: location, animated: true)
-                controls.updateIcon(isMapCentered: true)
+            case .centerMapOnLaunch: self.centerMap(on: location, radius: 800, animated: false)
+            case .centerMapAnimated, .locationButtonTapped: self.centerMap(on: location, radius: nil, animated: true)
         }
         
         print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")

@@ -4,7 +4,9 @@ import MapKit
 class MapView: UIViewController, MKMapViewDelegate
 {
     let location = LocationManager()
-       
+    
+    private var lastPitch: CGFloat?
+
     lazy var map: MKMapView =
     {
         let map = MKMapView()
@@ -51,23 +53,25 @@ class MapView: UIViewController, MKMapViewDelegate
         controls.didMove(toParent: self)
     }
     
-    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+    func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
     {
-        picker.sortAndReset()
-        controls.updateIcon(isMapCentered: false)
-    }
-    
-    func centerMap(on location: CLLocation, radius: CLLocationDistance = 800, animated: Bool = true)
-    {
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
+        if let radius
+        {
+            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
+            
+            map.setRegion(region, animated: animated)
+        }
+        else
+        {
+            map.setCenter(location.coordinate, animated: animated)
+        }
         
-        map.setRegion(region, animated: animated)
+        controls.updateLocationButton(isMapCentered: true)
     }
     
     func togglePitch()
     {
         controls.pitchButton.isSelected.toggle()
-        controls.pitchButton.configuration?.image = UIImage(systemName: controls.pitchButton.isSelected ? "view.3d" : "view.2d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
         
         let camera = MKMapCamera(
             lookingAtCenter: map.centerCoordinate,
@@ -77,6 +81,24 @@ class MapView: UIViewController, MKMapViewDelegate
         )
         
         map.setCamera(camera, animated: true)
+    }
+    
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+    {
+        picker.sortAndReset()
+        controls.updateLocationButton(isMapCentered: false)
+    }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+    {
+        let currentPitch = mapView.camera.pitch
+        
+        if let lastPitch, lastPitch != currentPitch
+        {
+            controls.updatePitchButton(isPitchActive: currentPitch > 0)
+        }
+        
+        lastPitch = currentPitch
     }
     
     private func setupConstraints()

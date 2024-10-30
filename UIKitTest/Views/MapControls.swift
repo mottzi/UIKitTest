@@ -50,7 +50,7 @@ class MapControls: UIViewController
             
             guard let lastLocation = self?.mapView?.location.location else { return }
             self?.mapView?.centerMap(on: lastLocation)
-            self?.mapView?.controls.updateIcon(isMapCentered: true)
+            self?.mapView?.controls.updateLocationButton(isMapCentered: true)
         }
         
         button.addAction(action, for: .touchUpInside)
@@ -71,7 +71,7 @@ class MapControls: UIViewController
         button.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
         button.layer.shadowOpacity = 1
         
-        button.configuration?.image = UIImage(systemName: "view.2d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
+        button.configuration?.image = UIImage(systemName: "view.3d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
         button.configuration?.preferredSymbolConfigurationForImage = .init(pointSize: 14)
         
         button.addAction(UIAction{ [weak self] _ in self?.mapView?.togglePitch() }, for: .touchUpInside)
@@ -111,11 +111,14 @@ class MapControls: UIViewController
         pitchButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     
-    func updateIcon(isMapCentered: Bool)
+    func updateLocationButton(isMapCentered: Bool)
     {
-        guard let mapView else { return }
-        
         locationButton.configuration?.baseForegroundColor = isMapCentered ? .systemBlue : .systemGray
+    }
+    
+    func updatePitchButton(isPitchActive: Bool)
+    {
+        pitchButton.configuration?.image = UIImage(systemName: isPitchActive ? "view.2d" : "view.3d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
     }
 }
 
