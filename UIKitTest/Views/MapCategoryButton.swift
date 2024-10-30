@@ -2,17 +2,17 @@ import UIKit
 
 class MapCategoryButton: UIButton
 {
-    let title: String
-    let icon: String
+    let category: MapCategory
     
+    weak var map: MapView?
     weak var picker: MapCategoryPicker?
     
-    init(title: String, icon: String, picker: MapCategoryPicker?)
+    init(category: MapCategory, map: MapView?, picker: MapCategoryPicker?)
     {
-        self.title = title
-        self.icon = icon
+        self.category = category
+        self.map = map
         self.picker = picker
-        
+
         super.init(frame: .zero)
         
         setupButton()
@@ -33,10 +33,10 @@ class MapCategoryButton: UIButton
         self.layer.shadowOpacity = 1
         
         // title
-        self.configuration?.attributedTitle = AttributedString(self.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .subheadline, weight: .medium)]))
+        self.configuration?.attributedTitle = AttributedString(category.title, attributes: AttributeContainer([.font: UIFont.preferredFont(for: .subheadline, weight: .medium)]))
         
         // icon
-        let originalImage = UIImage(systemName: self.icon, withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
+        let originalImage = UIImage(systemName: category.icon, withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
         let resizedIcon = originalImage.scaledToFit(height: 20)
         
         self.configuration?.image = resizedIcon
@@ -52,12 +52,31 @@ class MapCategoryButton: UIButton
     
     private func toggleButton()
     {
+        guard let map = map?.map else { return }
+        
         self.isSelected.toggle()
+        picker?.haptics.selectionChanged()
         
         self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
         
-        // picker?.sortButtons()
-        picker?.haptics.selectionChanged()
+        if self.isSelected
+        {
+            Task.detached()
+            {
+                let request = await AppleRequest(with: self.category, region: map.region)
+
+                guard let foundItems = await request.start() else { return }
+                
+                DispatchQueue.main.async
+                {
+                    print(foundItems)
+                }
+            }
+        }
+        else
+        {
+            
+        }
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

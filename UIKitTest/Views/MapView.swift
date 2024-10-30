@@ -9,16 +9,21 @@ class MapView: UIViewController, MKMapViewDelegate
 
     lazy var map: MKMapView =
     {
+        let config = MKStandardMapConfiguration()
+        config.pointOfInterestFilter = .excludingAll
+        
         let map = MKMapView()
         map.delegate = self
-        map.preferredConfiguration = MKStandardMapConfiguration()
+        map.preferredConfiguration = config
         map.showsUserLocation = true
+        map.showsCompass = false
+        
         return map
     }()
     
     private lazy var picker: MapCategoryPicker =
     {
-        let picker = MapCategoryPicker()
+        let picker = MapCategoryPicker(map: self)
         picker.view.translatesAutoresizingMaskIntoConstraints = false
         picker.view.backgroundColor = .clear
         return picker
@@ -113,7 +118,7 @@ class MapView: UIViewController, MKMapViewDelegate
         picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
         
         // controls in bottom right corner
-        controls.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        controls.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         controls.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
     }
 }

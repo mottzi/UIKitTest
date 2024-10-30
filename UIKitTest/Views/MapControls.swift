@@ -50,7 +50,6 @@ class MapControls: UIViewController
             
             guard let lastLocation = self?.mapView?.location.location else { return }
             self?.mapView?.centerMap(on: lastLocation)
-            self?.mapView?.controls.updateLocationButton(isMapCentered: true)
         }
         
         button.addAction(action, for: .touchUpInside)

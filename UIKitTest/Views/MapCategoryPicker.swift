@@ -3,7 +3,18 @@ import UIKit
 class MapCategoryPicker: UIViewController
 {
     public let haptics = UISelectionFeedbackGenerator()
-
+    
+    weak var map: MapView?
+    
+    init(map: MapView?)
+    {
+        self.map = map
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    
     private lazy var scrollview: UIScrollView =
     {
         let scrollview = UIScrollView()
@@ -53,14 +64,14 @@ class MapCategoryPicker: UIViewController
     {
         for category in MapCategory.allCategories
         {
-            let button = CategoryButton(title: category.title, icon: category.icon, picker: self)
+            let button = MapCategoryButton(category: category, map: self.map, picker: self)
             view.addArrangedSubview(button)
         }
     }
     
     public func sortButtons()
     {
-        let buttons = stackview.arrangedSubviews.compactMap { $0 as? CategoryButton }
+        let buttons = stackview.arrangedSubviews.compactMap { $0 as? MapCategoryButton }
         let sortedButtons = buttons.sorted { $0.isSelected && !$1.isSelected }
              
         for button in sortedButtons
