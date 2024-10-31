@@ -1,4 +1,5 @@
 import UIKit
+import MapKit
 
 class MapCategoryButton: UIButton
 {
@@ -58,7 +59,7 @@ class MapCategoryButton: UIButton
         picker?.haptics.selectionChanged()
         
         self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
-        
+                
         if self.isSelected
         {
             Task.detached()
@@ -69,17 +70,42 @@ class MapCategoryButton: UIButton
                 
                 DispatchQueue.main.async
                 {
-                    print(foundItems)
+                    foundItems.forEach 
+                    {
+                        let marker = MapAnnotation()
+                        marker.mapCategory = self.category
+                        marker.coordinate = $0.mapItem.placemark.coordinate
+                        marker.title = $0.mapItem.name
+                        
+                        map.addAnnotation(marker)
+                    }
                 }
             }
         }
         else
         {
+            let filtered = map.annotations.filter
+            {
+                guard let marker = $0 as? MapAnnotation else { return false }
+                
+                guard let category = marker.mapCategory, category == self.category else { return false }
+                
+                return true
+            }
             
+            filtered.forEach 
+            {
+                self.map?.removeAnnotation($0, animated: true)
+            }
         }
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
+class MapAnnotation: MKPointAnnotation
+{
+    var mapCategory: MapCategory?
 }
 
 #Preview

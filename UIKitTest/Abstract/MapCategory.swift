@@ -1,6 +1,6 @@
 import MapKit
 
-struct MapCategory
+struct MapCategory: Equatable
 {
     let title: String
     let icon: String

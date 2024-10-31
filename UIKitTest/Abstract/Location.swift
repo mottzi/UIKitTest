@@ -45,7 +45,7 @@ extension MapView: CLLocationManagerDelegate
             case .centerMapAnimated, .locationButtonTapped: self.centerMap(on: location, radius: nil, animated: true)
         }
         
-        print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")
+//        print("LocationManager.Request for '\(self.location.locationRequestReason.rawValue)': done.")
         self.location.locationRequestReason = .idle
     }
     
