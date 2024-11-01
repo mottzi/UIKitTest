@@ -145,6 +145,7 @@ class MapCategoryPicker: UIViewController
                         marker.mapCategory = category
                         marker.coordinate = item.mapItem.placemark.coordinate
                         marker.title = item.mapItem.name
+                        marker.color = category.color
                         
                         map.addAnnotation(marker)
                         

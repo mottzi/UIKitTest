@@ -128,6 +128,7 @@ class MapView: UIViewController, MKMapViewDelegate
             annotationView?.annotation = annotation
         }
         
+        annotationView?.markerTintColor = annotation.color
         annotationView?.alpha = 0.0
         annotationView?.glyphImage = UIImage(systemName: annotation.mapCategory?.icon ?? "mappin")
                 

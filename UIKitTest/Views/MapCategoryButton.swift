@@ -92,6 +92,7 @@ class MapAnnotation: MKPointAnnotation
 {
     var mapCategory: MapCategory?
     var identifier: String?
+    var color: UIColor?
 }
 
 #Preview

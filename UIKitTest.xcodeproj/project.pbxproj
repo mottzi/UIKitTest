@@ -113,12 +113,20 @@
 		9A61683D2CB85A890011E756 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9A37EC5F2CC93D4A00621DC4 /* MapView.swift */,
+				9ACDF6942CD5939500F1474D /* MapView */,
 				9A00A78A2CC1AE90001084BB /* MapCategoryPicker.swift */,
 				9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */,
 				9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		9ACDF6942CD5939500F1474D /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				9A37EC5F2CC93D4A00621DC4 /* MapView.swift */,
+			);
+			path = MapView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
