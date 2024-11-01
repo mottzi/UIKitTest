@@ -64,22 +64,7 @@ class MapCategoryButton: UIButton
         {
             Task.detached()
             {
-                let request = await AppleRequest(with: self.category, region: map.region)
-
-                guard let foundItems = await request.start() else { return }
-                
-                DispatchQueue.main.async
-                {
-                    foundItems.forEach 
-                    {
-                        let marker = MapAnnotation()
-                        marker.mapCategory = self.category
-                        marker.coordinate = $0.mapItem.placemark.coordinate
-                        marker.title = $0.mapItem.name
-                        
-                        map.addAnnotation(marker)
-                    }
-                }
+                await self.picker?.loadPOIFromRegion(of: [self.category])
             }
         }
         else
@@ -106,6 +91,7 @@ class MapCategoryButton: UIButton
 class MapAnnotation: MKPointAnnotation
 {
     var mapCategory: MapCategory?
+    var identifier: String?
 }
 
 #Preview

@@ -92,7 +92,7 @@ class MapView: UIViewController, MKMapViewDelegate
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
         picker.sortAndReset()
-        controls.updateLocationButton(isMapCentered: false)
+        controls.updateLocationButton(isMapCentered: false)        
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
@@ -105,8 +105,14 @@ class MapView: UIViewController, MKMapViewDelegate
         }
         
         lastPitch = currentPitch
+                
+        Task.detached()
+        {
+            let allCategories = await self.picker.getSelectedCategories()
+            await self.picker.loadPOIFromRegion(of: allCategories)
+        }
     }
-    
+
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? 
     {
         guard let annotation = annotation as? MapAnnotation else { return nil }
@@ -137,7 +143,7 @@ class MapView: UIViewController, MKMapViewDelegate
     {
         if animated
         {
-            guard let annotationView = map.view(for: annotation) else { return }
+            guard let annotationView = map.view(for: annotation) else { return self.map.removeAnnotation(annotation) }
             
             UIView.animate(withDuration: 0.5)
             {

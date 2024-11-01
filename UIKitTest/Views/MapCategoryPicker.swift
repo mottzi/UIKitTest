@@ -83,6 +83,15 @@ class MapCategoryPicker: UIViewController
         stackview.layoutIfNeeded()
     }
     
+    public func getSelectedCategories() -> [MapCategory]
+    {
+        let selectedCategories = stackview.arrangedSubviews.compactMap { $0 as? MapCategoryButton }
+            .filter { $0.isSelected }
+            .map { $0.category }
+        
+        return selectedCategories
+    }
+    
     public func resetPickerScroll()
     {
         scrollview.setContentOffset(.zero, animated: false)
@@ -102,6 +111,47 @@ class MapCategoryPicker: UIViewController
         {
             sortButtons()
             resetPickerScroll()
+        }
+    }
+    
+    public func loadPOIFromRegion(of categories: [MapCategory]) async
+    {
+        guard let map = map?.map else { return }
+        
+        for category in categories
+        {
+            let request = AppleRequest(with: category, region: map.region)
+            
+            guard let foundItems = await request.start() else { return }
+            
+            DispatchQueue.main.async
+            {
+                foundItems.forEach
+                { item in
+                   
+                    let exists = map.annotations.contains
+                    { annotation in
+                        guard let existing = annotation as? MapAnnotation,
+                              let identifier = item.mapItem.identifier?.rawValue
+                        else { return false }
+                        
+                        return existing.identifier == identifier
+                    }
+                    
+                    if !exists
+                    {
+                        let marker = MapAnnotation()
+                        marker.identifier = item.mapItem.identifier?.rawValue
+                        marker.mapCategory = category
+                        marker.coordinate = item.mapItem.placemark.coordinate
+                        marker.title = item.mapItem.name
+                        
+                        map.addAnnotation(marker)
+                        
+                        print("adding POI '\(marker.title)'")
+                    }
+                }
+            }
         }
     }
 }

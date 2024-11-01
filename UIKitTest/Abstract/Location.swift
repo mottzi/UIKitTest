@@ -41,7 +41,7 @@ extension MapView: CLLocationManagerDelegate
         switch self.location.locationRequestReason
         {
             case .idle: return
-            case .centerMapOnLaunch: self.centerMap(on: location, radius: 800, animated: false)
+            case .centerMapOnLaunch: self.centerMap(on: location, radius: 1200, animated: false)
             case .centerMapAnimated, .locationButtonTapped: self.centerMap(on: location, radius: nil, animated: true)
         }
         

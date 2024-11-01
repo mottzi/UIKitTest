@@ -34,7 +34,7 @@ class MapControls: UIViewController
         button.configuration = .filled()
         button.configuration?.background.cornerRadius = 25
         
-        button.configuration?.baseForegroundColor = .systemBlue
+        button.configuration?.baseForegroundColor = .systemGray
         button.configuration?.baseBackgroundColor = .buttonUnselected
         button.layer.shadowRadius = 1.5
         button.layer.shadowOffset = CGSize(width: 0, height: 1)
