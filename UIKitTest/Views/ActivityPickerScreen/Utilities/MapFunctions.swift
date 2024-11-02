@@ -52,7 +52,7 @@ extension MapView
         Task.detached()
         {
             let allCategories = await self.picker.getSelectedCategories()
-            await self.picker.loadPOIFromRegion(of: allCategories)
+            await self.picker.loadApplePOIFromRegion(categories: allCategories)
         }
     }
 }

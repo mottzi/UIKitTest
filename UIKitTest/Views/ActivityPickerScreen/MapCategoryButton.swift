@@ -5,13 +5,11 @@ class MapCategoryButton: UIButton
 {
     let category: MapCategory
     
-    weak var map: MapView?
     weak var picker: MapCategoryPicker?
     
-    init(category: MapCategory, map: MapView?, picker: MapCategoryPicker?)
+    init(category: MapCategory, picker: MapCategoryPicker?)
     {
         self.category = category
-        self.map = map
         self.picker = picker
 
         super.init(frame: .zero)
@@ -53,35 +51,22 @@ class MapCategoryButton: UIButton
     
     private func toggleButton()
     {
-        guard let map = map?.map else { return }
-        
         self.isSelected.toggle()
         picker?.haptics.selectionChanged()
         
-        self.configuration?.baseBackgroundColor = UIColor(named: self.isSelected ? "ButtonSelected" : "ButtonUnselected")
+        self.configuration?.baseBackgroundColor = self.isSelected ? .buttonSelected : .buttonUnselected
                 
         if self.isSelected
         {
             Task.detached()
             {
-                await self.picker?.loadPOIFromRegion(of: [self.category])
+                await self.picker?.loadApplePOIFromRegion(categories: [self.category])
+                await self.picker?.loadOSMPOIFromRegion(categories: [self.category])
             }
         }
         else
         {
-            let filtered = map.annotations.filter
-            {
-                guard let marker = $0 as? MapAnnotation else { return false }
-                
-                guard let category = marker.mapCategory, category == self.category else { return false }
-                
-                return true
-            }
-            
-            filtered.forEach 
-            {
-                self.map?.removeAnnotation($0, animated: true)
-            }
+            self.picker?.removePOI(category: self.category)
         }
     }
     

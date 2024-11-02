@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9A00A78B2CC1AE90001084BB /* MapCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A00A78A2CC1AE90001084BB /* MapCategoryPicker.swift */; };
+		9A1F03F02CD6B70500CFF5F9 /* OSMQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1F03EE2CD6B70500CFF5F9 /* OSMQuery.swift */; };
+		9A1F03F12CD6B70500CFF5F9 /* OSMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1F03EF2CD6B70500CFF5F9 /* OSMRequest.swift */; };
 		9A2494DD2CCA472D00E495D3 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2494DC2CCA472D00E495D3 /* UIImage.swift */; };
 		9A37EC5A2CC90F5500621DC4 /* MapCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */; };
 		9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5B2CC9124100621DC4 /* MapCategory.swift */; };
@@ -29,6 +31,8 @@
 
 /* Begin PBXFileReference section */
 		9A00A78A2CC1AE90001084BB /* MapCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategoryPicker.swift; sourceTree = "<group>"; };
+		9A1F03EE2CD6B70500CFF5F9 /* OSMQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMQuery.swift; sourceTree = "<group>"; };
+		9A1F03EF2CD6B70500CFF5F9 /* OSMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMRequest.swift; sourceTree = "<group>"; };
 		9A2494DC2CCA472D00E495D3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategoryButton.swift; sourceTree = "<group>"; };
 		9A37EC5B2CC9124100621DC4 /* MapCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategory.swift; sourceTree = "<group>"; };
@@ -107,8 +111,9 @@
 			children = (
 				9A6168282CB8526F0011E756 /* AppDelegate.swift */,
 				9A61682A2CB8526F0011E756 /* SceneDelegate.swift */,
-				9A37EC5B2CC9124100621DC4 /* MapCategory.swift */,
 				9AA133D32CD25B760023EA25 /* AppleRequest.swift */,
+				9A1F03EF2CD6B70500CFF5F9 /* OSMRequest.swift */,
+				9A1F03EE2CD6B70500CFF5F9 /* OSMQuery.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -127,6 +132,7 @@
 				9A604D482CCC205C00D96707 /* MapLocation.swift */,
 				9AB99C682CD61A0800A0160E /* MapFunctions.swift */,
 				9AB99C6A2CD61A6500A0160E /* MapAnnotations.swift */,
+				9A37EC5B2CC9124100621DC4 /* MapCategory.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -215,6 +221,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AB99C692CD61A0800A0160E /* MapFunctions.swift in Sources */,
+				9A1F03F02CD6B70500CFF5F9 /* OSMQuery.swift in Sources */,
+				9A1F03F12CD6B70500CFF5F9 /* OSMRequest.swift in Sources */,
 				9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */,
 				9A2494DD2CCA472D00E495D3 /* UIImage.swift in Sources */,
 				9AB99C6B2CD61A6500A0160E /* MapAnnotations.swift in Sources */,

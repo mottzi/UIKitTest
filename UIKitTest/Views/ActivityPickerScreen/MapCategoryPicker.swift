@@ -64,7 +64,7 @@ class MapCategoryPicker: UIViewController
     {
         for category in MapCategory.allCategories
         {
-            let button = MapCategoryButton(category: category, map: self.map, picker: self)
+            let button = MapCategoryButton(category: category, picker: self)
             view.addArrangedSubview(button)
         }
     }
@@ -114,7 +114,7 @@ class MapCategoryPicker: UIViewController
         }
     }
     
-    public func loadPOIFromRegion(of categories: [MapCategory]) async
+    public func loadApplePOIFromRegion(categories: [MapCategory]) async
     {
         guard let map = map?.map else { return }
         
@@ -122,17 +122,24 @@ class MapCategoryPicker: UIViewController
         {
             let request = AppleRequest(with: category, region: map.region)
             
-            guard let foundItems = await request.start() else { return }
+            guard let foundItems = await request.start() else { continue }
+            
+            let button = stackview.arrangedSubviews
+                .compactMap { $0 as? MapCategoryButton }
+                .first { $0.category == category }
+            
+            guard let button else { continue }
+
+            if button.isSelected == false { continue }
             
             DispatchQueue.main.async
             {
                 foundItems.forEach
-                { item in
-                   
-                    let exists = map.annotations.contains
+                { poi in
+                    let exists = map.annotations.contains()
                     { annotation in
                         guard let existing = annotation as? MapAnnotation,
-                              let identifier = item.mapItem.identifier?.rawValue
+                              let identifier = poi.mapItem.identifier?.rawValue
                         else { return false }
                         
                         return existing.identifier == identifier
@@ -141,15 +148,78 @@ class MapCategoryPicker: UIViewController
                     if !exists
                     {
                         let marker = MapAnnotation()
-                        marker.identifier = item.mapItem.identifier?.rawValue
+                        marker.identifier = poi.mapItem.identifier?.rawValue
                         marker.mapCategory = category
-                        marker.coordinate = item.mapItem.placemark.coordinate
-                        marker.title = item.mapItem.name
+                        marker.coordinate = poi.mapItem.placemark.coordinate
+                        marker.title = poi.mapItem.name
+                        marker.color = category.color
+                        
+                        map.addAnnotation(marker)                        
+                    }
+                }
+            }
+        }
+    }
+    
+    public func removePOI(category: MapCategory)
+    {
+        guard let map = map?.map else { return }
+
+        let mapAnnotations = map.annotations.filter()
+        {
+            guard let marker = $0 as? MapAnnotation else { return false }
+            
+            guard let itemCategory = marker.mapCategory, itemCategory == category else { return false }
+            
+            return true
+        }
+        
+        mapAnnotations.forEach
+        {
+            self.map?.removeAnnotation($0, animated: true)
+        }
+    }
+    
+    public func loadOSMPOIFromRegion(categories: [MapCategory]) async
+    {
+        guard let map = map?.map else { return }
+        
+        for category in categories
+        {
+            let request = OSMRequest(for: category, region: map.region)
+            
+            guard let foundItems = await request.start() else { continue }
+            
+            let button = stackview.arrangedSubviews
+                .compactMap { $0 as? MapCategoryButton }
+                .first { $0.category == category }
+            
+            guard let button else { continue }
+            
+            if button.isSelected == false { continue }
+            
+            DispatchQueue.main.async
+            {
+                foundItems.forEach
+                { poi in
+                    let exists = map.annotations.contains()
+                    { annotation in
+                        guard let existing = annotation as? MapAnnotation
+                        else { return false }
+                        
+                        return existing.identifier == "\(poi.hashValue)"
+                    }
+                    
+                    if !exists
+                    {
+                        let marker = MapAnnotation()
+                        marker.identifier = "\(poi.hashValue)"
+                        marker.mapCategory = category
+                        marker.coordinate = poi.coordinate
+                        marker.title = poi.name
                         marker.color = category.color
                         
                         map.addAnnotation(marker)
-                        
-                        print("adding POI '\(marker.title ?? "no title")'")
                     }
                 }
             }
