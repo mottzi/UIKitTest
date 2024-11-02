@@ -3,23 +3,12 @@ import MapKit
 
 class MapView: UIViewController, MKMapViewDelegate
 {
-    lazy var location: LocationManager? =
+    var lastPitch: CGFloat?
+    
+    lazy var location: MapLocation? =
     {
-        return LocationManager(map: self)
+        return MapLocation(map: self)
     }()
-    
-//    init()
-//    {
-//        super.init(nibName: nil, bundle: nil)
-//
-//        location = LocationManager(map: self)
-//    }
-//    
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
-    private var lastPitch: CGFloat?
 
     lazy var map: MKMapView =
     {
@@ -36,7 +25,7 @@ class MapView: UIViewController, MKMapViewDelegate
         return map
     }()
     
-    private lazy var picker: MapCategoryPicker =
+    lazy var picker: MapCategoryPicker =
     {
         let picker = MapCategoryPicker(map: self)
         picker.view.translatesAutoresizingMaskIntoConstraints = false
@@ -71,108 +60,6 @@ class MapView: UIViewController, MKMapViewDelegate
         
         picker.didMove(toParent: self)
         controls.didMove(toParent: self)
-    }
-    
-    func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
-    {
-        if let radius
-        {
-            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
-            
-            map.setRegion(region, animated: animated)
-        }
-        else
-        {
-            map.setCenter(location.coordinate, animated: animated)
-        }
-        
-        controls.updateLocationButton(isMapCentered: true)
-    }
-    
-    func togglePitch()
-    {
-        controls.pitchButton.isSelected.toggle()
-        
-        let camera = MKMapCamera(
-            lookingAtCenter: map.centerCoordinate,
-            fromDistance: map.camera.centerCoordinateDistance,
-            pitch: controls.pitchButton.isSelected ? 70 : 0,
-            heading: map.camera.heading
-        )
-        
-        map.setCamera(camera, animated: true)
-    }
-    
-    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
-    {
-        picker.sortAndReset()
-        controls.updateLocationButton(isMapCentered: false)        
-    }
-    
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
-    {
-        let currentPitch = mapView.camera.pitch
-        
-        if let lastPitch, lastPitch != currentPitch
-        {
-            controls.updatePitchButton(isPitchActive: currentPitch > 0)
-        }
-        
-        lastPitch = currentPitch
-                
-        Task.detached()
-        {
-            let allCategories = await self.picker.getSelectedCategories()
-            await self.picker.loadPOIFromRegion(of: allCategories)
-        }
-    }
-
-    func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? 
-    {
-        guard let annotation = annotation as? MapAnnotation else { return nil }
-        
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomPin") as? MKMarkerAnnotationView
-        
-        if annotationView == nil 
-        {
-            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "CustomPin")
-        }
-        else
-        {
-            annotationView?.annotation = annotation
-        }
-        
-        annotationView?.markerTintColor = annotation.color
-        annotationView?.alpha = 0.0
-        annotationView?.glyphImage = UIImage(systemName: annotation.mapCategory?.icon ?? "mappin")
-                
-        UIView.animate(withDuration: 0.5)
-        {
-            annotationView?.alpha = 1.0
-        }
-        
-        return annotationView
-    }
-    
-    func removeAnnotation(_ annotation: MKAnnotation, animated: Bool)
-    {
-        if animated
-        {
-            guard let annotationView = map.view(for: annotation) else { return self.map.removeAnnotation(annotation) }
-            
-            UIView.animate(withDuration: 0.5)
-            {
-                annotationView.alpha = 0
-            }
-            completion:
-            { _ in
-                self.map.removeAnnotation(annotation)
-            }
-        }
-        else
-        {
-            self.map.removeAnnotation(annotation)
-        }
     }
     
     private func setupConstraints()

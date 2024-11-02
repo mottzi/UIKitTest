@@ -149,7 +149,7 @@ class MapCategoryPicker: UIViewController
                         
                         map.addAnnotation(marker)
                         
-                        print("adding POI '\(marker.title)'")
+                        print("adding POI '\(marker.title ?? "no title")'")
                     }
                 }
             }
