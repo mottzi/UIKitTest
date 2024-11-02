@@ -3,7 +3,21 @@ import MapKit
 
 class MapView: UIViewController, MKMapViewDelegate
 {
-    let location = LocationManager()
+    lazy var location: LocationManager? =
+    {
+        return LocationManager(map: self)
+    }()
+    
+//    init()
+//    {
+//        super.init(nibName: nil, bundle: nil)
+//
+//        location = LocationManager(map: self)
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     private var lastPitch: CGFloat?
 
@@ -40,7 +54,7 @@ class MapView: UIViewController, MKMapViewDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        setupLocation()
+        location?.setupLocation()
         setupViews()
     }
     
