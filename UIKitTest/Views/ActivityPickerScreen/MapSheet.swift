@@ -28,8 +28,10 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
-    let sheetLabel = UILabel()
-    
+    let sheetLabelStack = UIStackView()
+    let sheetStateLabel = UILabel()
+    let sheetAnnotationLabel = UILabel()
+
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -39,20 +41,34 @@ class MapSheet: UIViewController
     
     private func setupContent()
     {
-        sheetLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")\nannotations: 0"
-        sheetLabel.translatesAutoresizingMaskIntoConstraints = false
-        sheetLabel.numberOfLines = 2
-        sheetLabel.textAlignment = .center
+        sheetLabelStack.translatesAutoresizingMaskIntoConstraints = false
+        sheetLabelStack.axis = .vertical
         
-        self.view.addSubview(sheetLabel)
+        sheetStateLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")"
+//        sheetStateLabel.translatesAutoresizingMaskIntoConstraints = false
+        sheetStateLabel.textAlignment = .center
         
-        sheetLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        sheetLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        sheetAnnotationLabel.text = "annotations: 0"
+//        sheetAnnotationLabel.translatesAutoresizingMaskIntoConstraints = false
+        sheetAnnotationLabel.textAlignment = .center
+        
+        sheetLabelStack.addArrangedSubview(sheetStateLabel)
+        sheetLabelStack.addArrangedSubview(sheetAnnotationLabel)
+
+        self.view.addSubview(sheetLabelStack)
+        
+        sheetLabelStack.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        sheetLabelStack.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func updateSheetLabel(count annotationCount: Int? = nil)
+    func updateSheetStateLabel()
     {
-        sheetLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")\nannotations: \(annotationCount ?? 0)"
+        sheetStateLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")"
+    }
+    
+    func updateSheetAnnotationLabel(count annotationCount: Int)
+    {
+        sheetAnnotationLabel.text = "annotations: \(annotationCount)"
     }
     
     private func setupSheet()
@@ -167,13 +183,14 @@ class MapSheet: UIViewController
         sheetAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.6)
         {
             self.sheetHeight?.constant = finalState.rawValue
+            self.view.setNeedsLayout()
             self.parent?.view.layoutIfNeeded()
         }
         
         sheetAnimator?.addCompletion()
         { [weak self] _ in
             self?.sheetState = finalState
-            self?.updateSheetLabel()            
+            self?.updateSheetStateLabel()
         }
         
         sheetAnimator?.startAnimation()

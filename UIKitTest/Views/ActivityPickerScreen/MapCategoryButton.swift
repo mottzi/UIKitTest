@@ -62,14 +62,12 @@ class MapCategoryButton: UIButton
             {
                 await self.picker?.loadApplePOIFromRegion(categories: [self.category])
                 await self.picker?.loadOSMPOIFromRegion(categories: [self.category])
-                
-                await self.picker?.map?.visibleAnnotations()
+                await self.picker?.map?.handleVisibleAnnotationsChanged()
             }
         }
         else
         {
             self.picker?.removePOI(category: self.category)
-            self.picker?.map?.visibleAnnotations()
         }
     }
     

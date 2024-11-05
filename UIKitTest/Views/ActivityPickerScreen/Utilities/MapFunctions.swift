@@ -32,6 +32,19 @@ extension MapView
         map.setCamera(camera, animated: true)
     }
     
+    func handleVisibleAnnotationsChanged()
+    {
+        let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
+        let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
+        
+        sheet.updateSheetAnnotationLabel(count: visibleAnnotations.count)
+        
+        if !visibleAnnotations.isEmpty
+        {
+            print("\(visibleAnnotations.count) visible annotations: \(titles)")
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
         picker.sortAndReset()
@@ -57,17 +70,9 @@ extension MapView
             await self.picker.loadApplePOIFromRegion(categories: allCategories)
             await self.picker.loadOSMPOIFromRegion(categories: allCategories)
 
-            await self.visibleAnnotations()
+            await self.handleVisibleAnnotationsChanged()
         }
     }
-    
-    func visibleAnnotations()
-    {
-        let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
-        let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
-        
-        print("\(visibleAnnotations.count) visible annotations: \(titles)")
-        
-        sheet.updateSheetLabel(count: visibleAnnotations.count)
-    }
 }
+
+#Preview { MapView() }

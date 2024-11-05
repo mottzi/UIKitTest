@@ -174,9 +174,22 @@ class MapCategoryPicker: UIViewController
             return true
         }
         
-        mapAnnotations.forEach
+        for (index, annotation) in mapAnnotations.enumerated()
         {
-            self.map?.removeAnnotation($0, animated: true)
+            var completion: (() -> ())? = nil
+            
+            if index == mapAnnotations.count - 1
+            {
+                completion =
+                { [weak self] in
+                    if index == mapAnnotations.count - 1
+                    {
+                        self?.map?.handleVisibleAnnotationsChanged()
+                    }
+                }
+            }
+            
+            self.map?.removeAnnotation(annotation, animated: true, completion: completion)
         }
     }
     

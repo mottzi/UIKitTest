@@ -29,24 +29,26 @@ extension MapView
         return annotationView
     }
     
-    func removeAnnotation(_ annotation: MKAnnotation, animated: Bool)
+    func removeAnnotation(_ annotation: MKAnnotation, animated: Bool, completion: (() -> Void)? = nil)
     {
         if animated
         {
-            guard let annotationView = map.view(for: annotation) else { return self.map.removeAnnotation(annotation) }
+            guard let annotationView = map.view(for: annotation) else { return /*self.map.removeAnnotation(annotation)*/ }
             
             UIView.animate(withDuration: 0.5)
             {
                 annotationView.alpha = 0
             }
-        completion:
-            { _ in
-                self.map.removeAnnotation(annotation)
+            completion:
+            { [weak self] _ in
+                self?.map.removeAnnotation(annotation)
+                completion?()
             }
         }
         else
         {
             self.map.removeAnnotation(annotation)
+            completion?()
         }
     }
 }
