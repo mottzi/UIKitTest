@@ -18,10 +18,12 @@ class MapSheet: UIViewController
     
     private var currentState: SheetState = .minimized
     
-    // Constants for sheet positioning
+    // sheet config
     private let minimizedHeight: CGFloat = 100
     private let maximizedHeight: CGFloat = 250
     private let cornerRadius: CGFloat = 30
+    private let stretchResistance: CGFloat = 0.5
+    private let maxStretchHeight: CGFloat = 30
     
     private var heightConstraint: NSLayoutConstraint?
     
@@ -71,35 +73,49 @@ class MapSheet: UIViewController
         
         switch gesture.state
         {
-            case .changed: do
+            case .changed:
+                let baseHeight = currentState == .maximized ? maximizedHeight : minimizedHeight
+                var newHeight = baseHeight - translation.y
+                
+                // Apply resistance when stretching beyond maximizedHeight
+                if newHeight > maximizedHeight
                 {
-                    var newHeight = (currentState == .maximized ? maximizedHeight : minimizedHeight) - translation.y
-                    newHeight = min(maximizedHeight, max(minimizedHeight, newHeight))
+                    let extraStretch = newHeight - maximizedHeight
+                    let resistedStretch = extraStretch * stretchResistance
+                    newHeight = maximizedHeight + resistedStretch
                     
-                    heightConstraint?.constant = newHeight
+                    // Limit maximum stretch
+                    newHeight = min(maximizedHeight + maxStretchHeight, newHeight)
+                }
+                else if newHeight < minimizedHeight
+                {
+                    let extraCompression = minimizedHeight - newHeight
+                    let resistedCompression = extraCompression * stretchResistance
+                    newHeight = minimizedHeight - resistedCompression
+                    
+                    // Limit maximum compression
+                    newHeight = max(minimizedHeight - maxStretchHeight, newHeight)
                 }
                 
-            case .ended: do
-                {
-                    let currentHeight = heightConstraint?.constant ?? minimizedHeight
-                    let midPoint = (maximizedHeight + minimizedHeight) / 2
-                    
-                    if velocity.y > 500
-                    {
-                        animateSheet(to: .minimized)
-                    }
-                    else if velocity.y < -500
-                    {
-                        animateSheet(to: .maximized)
-                    }
-                    else if currentHeight > midPoint
-                    {
-                        animateSheet(to: .maximized)
-                    }
-                    else
-                    {
-                        animateSheet(to: .minimized)
-                    }
+                newHeight = max(minimizedHeight - maxStretchHeight, newHeight)
+                
+                heightConstraint?.constant = newHeight
+                
+            case .ended:
+                let currentHeight = heightConstraint?.constant ?? minimizedHeight
+                let midPoint = (maximizedHeight + minimizedHeight) / 2
+                
+                if currentHeight > maximizedHeight {
+                    animateSheet(to: .maximized)
+                }
+                else if velocity.y > 500 {
+                    animateSheet(to: .minimized)
+                }
+                else if currentHeight > midPoint {
+                    animateSheet(to: .maximized)
+                }
+                else {
+                    animateSheet(to: .minimized)
                 }
                 
             default: break
@@ -115,9 +131,14 @@ class MapSheet: UIViewController
             self.heightConstraint?.constant = height
             self.parent?.view.layoutIfNeeded()
         }
-    completion:
+        completion:
         { [weak self] _ in
             self?.currentState = state
         }
     }
+}
+
+#Preview
+{
+    MapView()
 }
