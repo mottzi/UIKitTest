@@ -1,7 +1,7 @@
 import UIKit
 import MapKit
 
-class MapView: UIViewController, MKMapViewDelegate, UISheetPresentationControllerDelegate
+class MapView: UIViewController, MKMapViewDelegate
 {
     var lastPitch: CGFloat?
     

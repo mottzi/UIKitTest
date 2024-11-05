@@ -36,6 +36,8 @@ extension MapView
     {
         picker.sortAndReset()
         controls.updateLocationButton(isMapCentered: false)
+        
+        sheet.animateSheet(to: .minimized)
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
@@ -53,6 +55,19 @@ extension MapView
         {
             let allCategories = await self.picker.getSelectedCategories()
             await self.picker.loadApplePOIFromRegion(categories: allCategories)
+            await self.picker.loadOSMPOIFromRegion(categories: allCategories)
+
+            await self.visibleAnnotations()
         }
+    }
+    
+    func visibleAnnotations()
+    {
+        let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
+        let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
+        
+        print("\(visibleAnnotations.count) visible annotations: \(titles)")
+        
+        sheet.updateSheetLabel(count: visibleAnnotations.count)
     }
 }

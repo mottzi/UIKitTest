@@ -1,6 +1,6 @@
 import UIKit
 
-class MapSheet: UIViewController
+extension MapSheet
 {
     enum SheetState: CGFloat
     {
@@ -8,10 +8,13 @@ class MapSheet: UIViewController
         case maximized = 250
         
         static let cornerRadius: CGFloat = 30
-        static let stretchResistance: CGFloat = 0.5
         static let maxStretchHeight: CGFloat = 30
+        static let stretchResistance: CGFloat = 0.5
     }
-    
+}
+
+class MapSheet: UIViewController
+{
     private var sheetState: SheetState = .minimized
     private var sheetHeight: NSLayoutConstraint?
     private var sheetAnimator: UIViewPropertyAnimator?
@@ -25,10 +28,31 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
+    let sheetLabel = UILabel()
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         setupSheet()
+        setupContent()
+    }
+    
+    private func setupContent()
+    {
+        sheetLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")\nannotations: 0"
+        sheetLabel.translatesAutoresizingMaskIntoConstraints = false
+        sheetLabel.numberOfLines = 2
+        sheetLabel.textAlignment = .center
+        
+        self.view.addSubview(sheetLabel)
+        
+        sheetLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        sheetLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    func updateSheetLabel(count annotationCount: Int? = nil)
+    {
+        sheetLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")\nannotations: \(annotationCount ?? 0)"
     }
     
     private func setupSheet()
@@ -118,24 +142,25 @@ class MapSheet: UIViewController
         let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
         let midPoint = (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
         
-        if currentHeight > SheetState.maximized.rawValue
-        {
-            animateSheet(to: .maximized)
-        }
-        else if velocity.y > 500
+        if velocity.y > 500
         {
             animateSheet(to: .minimized)
+        }
+        else if velocity.y < -500
+        {
+            animateSheet(to: .maximized)
         }
         else if currentHeight > midPoint
         {
             animateSheet(to: .maximized)
         }
-        else {
+        else
+        {
             animateSheet(to: .minimized)
         }
     }
         
-    private func animateSheet(to finalState: SheetState)
+    func animateSheet(to finalState: SheetState)
     {
         sheetAnimator?.stopAnimation(true)
                 
@@ -148,6 +173,7 @@ class MapSheet: UIViewController
         sheetAnimator?.addCompletion()
         { [weak self] _ in
             self?.sheetState = finalState
+            self?.updateSheetLabel()            
         }
         
         sheetAnimator?.startAnimation()
