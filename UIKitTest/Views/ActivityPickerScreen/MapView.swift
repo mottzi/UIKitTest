@@ -44,18 +44,14 @@ extension MapView
         self.view.addSubview(controls.view)
         self.view.addSubview(sheet.view)
         
-        setupConstraints()
+        map.constraints()
+        picker.constraints()
+        controls.constraints()
+        sheet.constraints()
         
         picker.didMove(toParent: self)
         controls.didMove(toParent: self)
         sheet.didMove(toParent: self)
-    }
-    
-    private func setupConstraints()
-    {
-        map.constraints(activate: true)
-        picker.constraints(activate: true)
-        controls.constraints(activate: true)
     }
 }
 

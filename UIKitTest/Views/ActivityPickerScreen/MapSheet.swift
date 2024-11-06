@@ -86,10 +86,8 @@ class MapSheet: UIViewController
         sheetBlur.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
-    override func didMove(toParent parent: UIViewController?)
+    func constraints(active: Bool = true)
     {
-        super.didMove(toParent: parent)
-        
         guard let parentView = parent?.view else { return }
         
         view.leadingAnchor.constraint(equalTo: parentView.leadingAnchor).isActive = true
