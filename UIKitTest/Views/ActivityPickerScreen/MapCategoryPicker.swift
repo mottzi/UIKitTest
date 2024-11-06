@@ -6,14 +6,15 @@ class MapCategoryPicker: UIViewController
     
     weak var map: MapView?
     
-    init(map: MapView?)
+    func setup(map: MapView)
     {
         self.map = map
         
-        super.init(nibName: nil, bundle: nil)
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.backgroundColor = .clear
     }
     
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+//    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     private lazy var scrollview: UIScrollView =
     {

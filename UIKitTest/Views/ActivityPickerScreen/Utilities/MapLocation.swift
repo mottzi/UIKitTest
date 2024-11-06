@@ -17,8 +17,9 @@ extension MapLocation
         self.requestLocation()
     }
     
-    func setupLocation()
+    func setup(map: MapView)
     {
+        self.map = map
         self.delegate = self
         self.desiredAccuracy = kCLLocationAccuracyBest
     }
@@ -28,11 +29,6 @@ class MapLocation: CLLocationManager, CLLocationManagerDelegate
 {
     weak var map: MapView?
     var locationRequestReason: LocationRequestReason = .centerMapOnLaunch
-    
-    init(map: MapView)
-    {
-        self.map = map
-    }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
     {

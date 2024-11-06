@@ -3,15 +3,14 @@ import MapKit
 
 class MapControls: UIViewController 
 {
-    weak var mapView: MapView?
+    weak var map: MapView?
     
-    init(map: MapView?)
+    func setup(map: MapView)
     {
-        super.init(nibName: nil, bundle: nil)
-        mapView = map
+        self.map = map
+        
+        self.view.translatesAutoresizingMaskIntoConstraints = false
     }
-    
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     private lazy var stack: UIStackView =
     {
@@ -46,10 +45,10 @@ class MapControls: UIViewController
         
         let action = UIAction 
         { [weak self] _ in
-            self?.mapView?.location?.requestLocation(reason: .locationButtonTapped)
+            self?.map?.location.requestLocation(reason: .locationButtonTapped)
             
-            guard let lastLocation = self?.mapView?.location?.location else { return }
-            self?.mapView?.centerMap(on: lastLocation)
+            guard let lastLocation = self?.map?.location.location else { return }
+            self?.map?.centerMap(on: lastLocation)
         }
         
         button.addAction(action, for: .touchUpInside)
@@ -73,7 +72,7 @@ class MapControls: UIViewController
         button.configuration?.image = UIImage(systemName: "view.3d", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))
         button.configuration?.preferredSymbolConfigurationForImage = .init(pointSize: 14)
         
-        button.addAction(UIAction{ [weak self] _ in self?.mapView?.togglePitch() }, for: .touchUpInside)
+        button.addAction(UIAction{ [weak self] _ in self?.map?.togglePitch() }, for: .touchUpInside)
         
         return button
     }()
@@ -81,7 +80,7 @@ class MapControls: UIViewController
     lazy var compassButton: MKCompassButton =
     {
         let compass = MKCompassButton()
-        compass.mapView = mapView?.map
+        compass.mapView = map?.map
         compass.compassVisibility = .visible
         compass.layer.shadowRadius = 1.5
         compass.layer.shadowOffset = CGSize(width: 0, height: 1)
