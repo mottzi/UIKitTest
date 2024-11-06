@@ -1,35 +1,30 @@
 import UIKit
 import MapKit
 
+// MARK: - init
 class MapView: UIViewController, MKMapViewDelegate
 {
-    let location: MapLocation
+    let location: MapLocation = MapLocation()
+
+    let map: MKMapView = MKMapView.create()
+    let picker: MapCategoryPicker = MapCategoryPicker()
+    let controls: MapControls = MapControls()
+    let sheet: MapSheet = MapSheet()
+    
     var lastPitch: CGFloat?
-
-    let map: MKMapView
-    let picker: MapCategoryPicker
-    let controls: MapControls
-    let sheet: MapSheet
-
-    init()
-    {
-        self.location = MapLocation()
-        self.map = MKMapView.create()
-        self.picker = MapCategoryPicker()
-        self.controls = MapControls()
-        self.sheet = MapSheet()
-
-        super.init(nibName: nil, bundle: nil)
-    }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         setupSubViews()
-        setupViews()
+        setupView()
     }
-    
+}
+
+// MARK: - setup - layout
+extension MapView
+{
     private func setupSubViews()
     {
         location.setup(map: self)
@@ -38,7 +33,7 @@ class MapView: UIViewController, MKMapViewDelegate
         controls.setup(map: self)
     }
     
-    private func setupViews()
+    private func setupView()
     {
         self.addChild(picker)
         self.addChild(controls)
@@ -58,17 +53,13 @@ class MapView: UIViewController, MKMapViewDelegate
     
     private func setupConstraints()
     {
-        picker.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        picker.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        picker.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
-        
-        controls.view.bottomAnchor.constraint(equalTo: sheet.view.topAnchor, constant: -10).isActive = true
-        controls.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+        map.constraints(activate: true)
+        picker.constraints(activate: true)
+        controls.constraints(activate: true)
     }
-    
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
+// MARK: - mapView
 fileprivate extension MKMapView
 {
     static func create() -> MKMapView
@@ -77,7 +68,7 @@ fileprivate extension MKMapView
         config.pointOfInterestFilter = .excludingAll
         
         let map = MKMapView()
-        map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        map.translatesAutoresizingMaskIntoConstraints = false
         map.preferredConfiguration = config
         map.showsUserLocation = true
         map.showsCompass = false
@@ -87,11 +78,21 @@ fileprivate extension MKMapView
     
     func setup(parent: MapView)
     {
-        self.frame = parent.view.bounds
         self.delegate = parent
+    }
+    
+    func constraints(activate: Bool = true)
+    {
+        guard let root = self.viewController as? MapView else { return }
+
+        self.leadingAnchor.constraint(equalTo: root.view.leadingAnchor).isActive = activate
+        self.trailingAnchor.constraint(equalTo: root.view.trailingAnchor).isActive = activate
+        self.topAnchor.constraint(equalTo: root.view.topAnchor).isActive = activate
+        self.bottomAnchor.constraint(equalTo: root.view.bottomAnchor).isActive = activate
     }
 }
 
+// MARK: - preview
 #Preview
 {
     MapView()

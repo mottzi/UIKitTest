@@ -12,6 +12,19 @@ class MapControls: UIViewController
         self.view.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    func constraints(activate: Bool = true)
+    {
+        if let sheet = map?.sheet
+        {
+            self.view.bottomAnchor.constraint(equalTo: sheet.view.topAnchor, constant: -10).isActive = true
+        }
+        
+        if let map = self.parent as? MapView
+        {
+            self.view.trailingAnchor.constraint(equalTo: map.view.trailingAnchor, constant: -10).isActive = true
+        }
+    }
+    
     private lazy var stack: UIStackView =
     {
         let stack = UIStackView()
