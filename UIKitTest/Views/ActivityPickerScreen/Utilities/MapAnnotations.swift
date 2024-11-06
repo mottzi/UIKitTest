@@ -1,5 +1,12 @@
 import MapKit
 
+class MapAnnotation: MKPointAnnotation
+{
+    var mapCategory: MapCategory?
+    var identifier: String?
+    var color: UIColor?
+}
+
 extension MapView
 {
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView?

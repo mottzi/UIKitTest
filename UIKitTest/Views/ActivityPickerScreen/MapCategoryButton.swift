@@ -74,13 +74,6 @@ class MapCategoryButton: UIButton
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
-class MapAnnotation: MKPointAnnotation
-{
-    var mapCategory: MapCategory?
-    var identifier: String?
-    var color: UIColor?
-}
-
 #Preview
 {
     MapView()
