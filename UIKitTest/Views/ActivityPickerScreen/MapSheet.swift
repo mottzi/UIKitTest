@@ -189,24 +189,9 @@ class MapSheet: UIViewController
             
             self.sheetState = finalState
             self.updateSheetStateLabel()
-            self.offsetMapOnSheetChange()
         }
         
         sheetAnimator?.startAnimation()
-    }
-    
-    private func offsetMapOnSheetChange()
-    {
-        guard let map = self.parent as? MapView else { return }
-        
-        if sheetState == .maximized
-        {
-            map.pushNorth(by: SheetState.heightDelta)
-        }
-        else
-        {
-            map.pushSouth(by: SheetState.heightDelta)
-        }
     }
 }
 
