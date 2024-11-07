@@ -1,16 +1,15 @@
 import UIKit
 
-extension MapSheet
+enum SheetState: CGFloat
 {
-    enum SheetState: CGFloat
-    {
-        case minimized = 100
-        case maximized = 250
-        
-        static let cornerRadius: CGFloat = 30
-        static let maxStretchHeight: CGFloat = 30
-        static let stretchResistance: CGFloat = 0.5
-    }
+    case minimized = 100
+    case maximized = 250
+    
+    static var heightDelta: CGFloat { maximized.rawValue - minimized.rawValue }
+    
+    static let cornerRadius: CGFloat = 30
+    static let maxStretchHeight: CGFloat = 30
+    static let stretchResistance: CGFloat = 0.5
 }
 
 class MapSheet: UIViewController
@@ -45,11 +44,9 @@ class MapSheet: UIViewController
         sheetLabelStack.axis = .vertical
         
         sheetStateLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")"
-//        sheetStateLabel.translatesAutoresizingMaskIntoConstraints = false
         sheetStateLabel.textAlignment = .center
         
         sheetAnnotationLabel.text = "annotations: 0"
-//        sheetAnnotationLabel.translatesAutoresizingMaskIntoConstraints = false
         sheetAnnotationLabel.textAlignment = .center
         
         sheetLabelStack.addArrangedSubview(sheetStateLabel)
@@ -173,7 +170,7 @@ class MapSheet: UIViewController
             animateSheet(to: .minimized)
         }
     }
-        
+    
     func animateSheet(to finalState: SheetState)
     {
         sheetAnimator?.stopAnimation(true)
@@ -187,11 +184,29 @@ class MapSheet: UIViewController
         
         sheetAnimator?.addCompletion()
         { [weak self] _ in
-            self?.sheetState = finalState
-            self?.updateSheetStateLabel()
+            guard let self else { return }
+            guard sheetState != finalState else { return }
+            
+            self.sheetState = finalState
+            self.updateSheetStateLabel()
+            self.offsetMapOnSheetChange()
         }
         
         sheetAnimator?.startAnimation()
+    }
+    
+    private func offsetMapOnSheetChange()
+    {
+        guard let map = self.parent as? MapView else { return }
+        
+        if sheetState == .maximized
+        {
+            map.pushNorth(by: SheetState.heightDelta)
+        }
+        else
+        {
+            map.pushSouth(by: SheetState.heightDelta)
+        }
     }
 }
 

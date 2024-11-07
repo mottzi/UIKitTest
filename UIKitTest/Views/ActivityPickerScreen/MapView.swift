@@ -4,14 +4,15 @@ import MapKit
 // MARK: - init
 class MapView: UIViewController, MKMapViewDelegate
 {
-    let location: MapLocation = MapLocation()
-
     let map: MKMapView = MKMapView.create()
+    let location: MapLocation = MapLocation()
+    
     let picker: MapCategoryPicker = MapCategoryPicker()
     let controls: MapControls = MapControls()
     let sheet: MapSheet = MapSheet()
     
     var lastPitch: CGFloat?
+    var ignoreMinimizeSheet: Bool? = false
     
     override func viewDidLoad()
     {

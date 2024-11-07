@@ -2,11 +2,33 @@ import MapKit
 
 extension MapView
 {
+    func pushNorth(by yDelta: CGFloat, animated: Bool = true)
+    {
+        var coordinateRegion = map.region
+        
+        coordinateRegion.center.latitude -= coordinateRegion.span.latitudeDelta * (yDelta / map.bounds.height)
+        
+        self.ignoreMinimizeSheet = true
+        map.setRegion(coordinateRegion, animated: true)
+    }
+    
+    func pushSouth(by yDelta: CGFloat, animated: Bool = true)
+    {
+        var coordinateRegion = map.region
+        
+        coordinateRegion.center.latitude += coordinateRegion.span.latitudeDelta * (yDelta / map.bounds.height)
+        
+        self.ignoreMinimizeSheet = true
+        map.setRegion(coordinateRegion, animated: true)
+    }
+    
     func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
     {
         if let radius
         {
-            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
+            var region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
+            
+            region.center.latitude -= region.span.latitudeDelta * (SheetState.minimized.rawValue / map.bounds.height)
             
             map.setRegion(region, animated: animated)
         }
@@ -35,13 +57,13 @@ extension MapView
     func handleVisibleAnnotationsChanged()
     {
         let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
-        let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
+        //let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
         
         sheet.updateSheetAnnotationLabel(count: visibleAnnotations.count)
         
         if !visibleAnnotations.isEmpty
         {
-            print("\(visibleAnnotations.count) visible annotations: \(titles)")
+            print("\(visibleAnnotations.count) visible annotations")//: \(titles)")
         }
     }
     
@@ -50,7 +72,14 @@ extension MapView
         picker.sortAndReset()
         controls.updateLocationButton(isMapCentered: false)
         
-        sheet.animateSheet(to: .minimized)
+        if let ignoreMinimizeSheet, ignoreMinimizeSheet == true
+        {
+            self.ignoreMinimizeSheet = false
+        }
+        else
+        {
+            sheet.animateSheet(to: .minimized)
+        }
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
