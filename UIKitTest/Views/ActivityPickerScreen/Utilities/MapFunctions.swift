@@ -56,19 +56,11 @@ extension MapView
         map.setCamera(camera, animated: true)
     }
     
-    func handleVisibleAnnotationsChanged()
+    func visibleAnnotationsWillChange()
     {
-        let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
-        //let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
-        
-//        sheet.updateSheetAnnotationLabel(count: visibleAnnotations.count)
-        sheet.updateVisibleAnnotations(visibleAnnotations)
-
-        if !visibleAnnotations.isEmpty
-        {
-            print("\(visibleAnnotations.count) visible annotations")//: \(titles)")
-        }
+        sheet.content.updateResultPicker()
     }
+    
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
@@ -81,7 +73,10 @@ extension MapView
         }
         else
         {
-            sheet.animateSheet(to: .minimized)
+            if sheet.sheetState == .maximized
+            {
+                sheet.animateSheet(to: .minimized)
+            }
         }
     }
     
@@ -102,7 +97,7 @@ extension MapView
             await self.picker.loadApplePOIFromRegion(categories: allCategories)
             await self.picker.loadOSMPOIFromRegion(categories: allCategories)
 
-            await self.handleVisibleAnnotationsChanged()
+            await self.visibleAnnotationsWillChange()
         }
     }
 }

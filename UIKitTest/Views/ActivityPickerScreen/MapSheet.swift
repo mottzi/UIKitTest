@@ -2,8 +2,9 @@ import UIKit
 
 enum SheetState: CGFloat
 {
-    case minimized = 100
-    case maximized = 200
+    case hidden = 0
+    case minimized = 110
+    case maximized = 190
     
     static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
     
@@ -14,12 +15,12 @@ enum SheetState: CGFloat
 
 class MapSheet: UIViewController
 {
-    private var sheetState: SheetState = .minimized
-    private var sheetHeight: NSLayoutConstraint?
-    private var sheetAnimator: UIViewPropertyAnimator?
-    private lazy var sheetGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSheetGesture))
+    var sheetState: SheetState = .hidden
+    var sheetHeight: NSLayoutConstraint?
+    var sheetAnimator: UIViewPropertyAnimator?
+    lazy var sheetGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSheetGesture))
 
-    private let sheetBlur: UIVisualEffectView =
+    let sheetBlur: UIVisualEffectView =
     {
         let blurEffect = UIBlurEffect(style: .systemThinMaterial)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -49,14 +50,11 @@ class MapSheet: UIViewController
             content.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
+        sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
+
         content.didMove(toParent: self)
     }
-    
-    func updateVisibleAnnotations(_ annotations: [MapAnnotation])
-    {
-        content.updateAnnotations(annotations)
-    }
-    
+
     private func setupSheet()
     {
         view.addSubview(sheetBlur)

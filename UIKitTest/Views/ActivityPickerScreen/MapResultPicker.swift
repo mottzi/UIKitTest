@@ -109,9 +109,9 @@ class MapResultCard: UICollectionViewCell
 // MARK: - HStack
 class MapResultPicker: UIViewController
 {
-    private var visibleAnnotations: [MapAnnotation] = []
+    private var annotations: [MapAnnotation] = []
     
-    private lazy var collectionView: UICollectionView =
+    private lazy var container: UICollectionView =
     {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -119,25 +119,25 @@ class MapResultPicker: UIViewController
         layout.minimumInteritemSpacing = 0
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 140)
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.isPagingEnabled = true
-        collectionView.register(MapResultCard.self, forCellWithReuseIdentifier: "POICardCell")
-        return collectionView
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.backgroundColor = .clear
+        collection.delegate = self
+        collection.dataSource = self
+        collection.showsHorizontalScrollIndicator = false
+        collection.isPagingEnabled = true
+        collection.register(MapResultCard.self, forCellWithReuseIdentifier: "POICardCell")
+        return collection
     }()
     
-    private let pageControl: UIPageControl =
-    {
-        let pageControl = UIPageControl()
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.currentPageIndicatorTintColor = .label
-        pageControl.pageIndicatorTintColor = .tertiaryLabel
-        return pageControl
-    }()
+//    private let pageControl: UIPageControl =
+//    {
+//        let pageControl = UIPageControl()
+//        pageControl.translatesAutoresizingMaskIntoConstraints = false
+//        pageControl.currentPageIndicatorTintColor = .label
+//        pageControl.pageIndicatorTintColor = .tertiaryLabel
+//        return pageControl
+//    }()
     
     override func viewDidLoad()
     {
@@ -145,46 +145,71 @@ class MapResultPicker: UIViewController
         setupViews()
     }
     
-    private func setupViews() {
-        view.addSubview(pageControl)
-        view.addSubview(collectionView)
+    private func setupViews()
+    {
+//        view.addSubview(pageControl)
+        view.addSubview(container)
         
         NSLayoutConstraint.activate([
-            pageControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 2),
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.heightAnchor.constraint(equalToConstant: 14),
+//            pageControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 2),
+//            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            pageControl.heightAnchor.constraint(equalToConstant: 14),
             
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: pageControl.bottomAnchor, constant: 6),
-            collectionView.heightAnchor.constraint(equalToConstant: 140)
+            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            container.topAnchor.constraint(equalTo: view.topAnchor, constant: 3),
+            container.heightAnchor.constraint(equalToConstant: 140)
         ])
     }
     
-    func updateAnnotations(_ annotations: [MapAnnotation])
+    func updateResultPicker()
     {
-        visibleAnnotations = annotations
-        pageControl.numberOfPages = annotations.count
-        collectionView.reloadData()
+        guard let root = parent?.parent as? MapView else { return }
+        
+        let visibleAnnotations = root.map.annotations(in: root.map.visibleMapRect).compactMap { $0 as? MapAnnotation }
+
+        self.annotations = visibleAnnotations
+        
+        container.reloadData()
+
+        if self.annotations.isEmpty
+        {
+            root.sheet.animateSheet(to: .hidden)
+//            if root.sheet.sheetState != .minimized
+//            {
+//                root.sheet.animateSheet(to: .minimized)
+//            }
+        }
+        else
+        {
+            if root.sheet.sheetState == .hidden
+            {
+                root.sheet.animateSheet(to: .minimized)
+            }
+        }
     }
 }
 
 // MARK: - Collection View Delegate & DataSource
-extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return visibleAnnotations.count
+extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
+{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return annotations.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "POICardCell", for: indexPath) as! MapResultCard
-        cell.configure(with: visibleAnnotations[indexPath.item])
+        cell.configure(with: annotations[indexPath.item])
         return cell
     }
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-        pageControl.currentPage = page
-    }
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+//    {
+//        let page = Int(scrollView.contentOffset.x / scrollView.bounds.width)
+//        pageControl.currentPage = page
+//    }
 }
 
 #Preview

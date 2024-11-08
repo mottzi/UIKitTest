@@ -195,7 +195,7 @@ class MapCategoryPicker: UIViewController
                 { [weak self] in
                     if index == mapAnnotations.count - 1
                     {
-                        self?.map?.handleVisibleAnnotationsChanged()
+                        self?.map?.visibleAnnotationsWillChange()
                     }
                 }
             }
