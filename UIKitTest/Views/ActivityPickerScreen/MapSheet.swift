@@ -3,11 +3,11 @@ import UIKit
 enum SheetState: CGFloat
 {
     case minimized = 100
-    case maximized = 250
+    case maximized = 200
     
-    static var heightDelta: CGFloat { maximized.rawValue - minimized.rawValue }
+    static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
     
-    static let cornerRadius: CGFloat = 30
+    static let cornerRadius: CGFloat = 0
     static let maxStretchHeight: CGFloat = 30
     static let stretchResistance: CGFloat = 0.5
 }
@@ -27,9 +27,7 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
-    let sheetLabelStack = UIStackView()
-    let sheetStateLabel = UILabel()
-    let sheetAnnotationLabel = UILabel()
+    let content = MapResultPicker()
 
     override func viewDidLoad()
     {
@@ -40,32 +38,23 @@ class MapSheet: UIViewController
     
     private func setupContent()
     {
-        sheetLabelStack.translatesAutoresizingMaskIntoConstraints = false
-        sheetLabelStack.axis = .vertical
+        addChild(content)
+        view.addSubview(content.view)
+        content.view.translatesAutoresizingMaskIntoConstraints = false
         
-        sheetStateLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")"
-        sheetStateLabel.textAlignment = .center
+        NSLayoutConstraint.activate([
+            content.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            content.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            content.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
+            content.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
         
-        sheetAnnotationLabel.text = "annotations: 0"
-        sheetAnnotationLabel.textAlignment = .center
-        
-        sheetLabelStack.addArrangedSubview(sheetStateLabel)
-        sheetLabelStack.addArrangedSubview(sheetAnnotationLabel)
-
-        self.view.addSubview(sheetLabelStack)
-        
-        sheetLabelStack.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        sheetLabelStack.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        content.didMove(toParent: self)
     }
     
-    func updateSheetStateLabel()
+    func updateVisibleAnnotations(_ annotations: [MapAnnotation])
     {
-        sheetStateLabel.text = "\(sheetState == .minimized ? "minimized" : "maximized")"
-    }
-    
-    func updateSheetAnnotationLabel(count annotationCount: Int)
-    {
-        sheetAnnotationLabel.text = "annotations: \(annotationCount)"
+        content.updateAnnotations(annotations)
     }
     
     private func setupSheet()
@@ -188,7 +177,7 @@ class MapSheet: UIViewController
             guard sheetState != finalState else { return }
             
             self.sheetState = finalState
-            self.updateSheetStateLabel()
+//            self.updateSheetStateLabel()
         }
         
         sheetAnimator?.startAnimation()

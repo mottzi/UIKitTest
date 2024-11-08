@@ -24,11 +24,12 @@ extension MapView
     
     func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
     {
+        ignoreMinimizeSheet = true
         if let radius
         {
-            var region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
+            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
             
-            region.center.latitude -= region.span.latitudeDelta * (SheetState.minimized.rawValue / map.bounds.height)
+//            region.center.latitude -= region.span.latitudeDelta * (SheetState.minimized.rawValue / map.bounds.height)
             
             map.setRegion(region, animated: animated)
         }
@@ -51,6 +52,7 @@ extension MapView
             heading: map.camera.heading
         )
         
+        ignoreMinimizeSheet = true
         map.setCamera(camera, animated: true)
     }
     
@@ -59,8 +61,9 @@ extension MapView
         let visibleAnnotations = map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
         //let titles = visibleAnnotations.compactMap { $0.title }.joined(separator: ", ")
         
-        sheet.updateSheetAnnotationLabel(count: visibleAnnotations.count)
-        
+//        sheet.updateSheetAnnotationLabel(count: visibleAnnotations.count)
+        sheet.updateVisibleAnnotations(visibleAnnotations)
+
         if !visibleAnnotations.isEmpty
         {
             print("\(visibleAnnotations.count) visible annotations")//: \(titles)")

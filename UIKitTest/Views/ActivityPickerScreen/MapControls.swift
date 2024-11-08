@@ -14,15 +14,17 @@ class MapControls: UIViewController
     
     func constraints(activate: Bool = true)
     {
-        if let sheet = map?.sheet
-        {
-            self.view.bottomAnchor.constraint(equalTo: sheet.view.topAnchor, constant: -10).isActive = true
-        }
+        guard let map else { return }
         
-        if let map = self.parent as? MapView
-        {
-            self.view.trailingAnchor.constraint(equalTo: map.view.trailingAnchor, constant: -10).isActive = true
-        }
+        let a = self.view.bottomAnchor.constraint(equalTo: map.sheet.view.topAnchor, constant: -10)
+        a.priority = .defaultLow
+        a.isActive = activate
+        
+        let c = self.view.bottomAnchor.constraint(lessThanOrEqualTo: map.map.safeAreaLayoutGuide.bottomAnchor, constant: -6)
+        c.priority = .required
+        c.isActive = true
+        
+        self.view.trailingAnchor.constraint(equalTo: map.view.trailingAnchor, constant: -10).isActive = true
     }
     
     private lazy var stack: UIStackView =

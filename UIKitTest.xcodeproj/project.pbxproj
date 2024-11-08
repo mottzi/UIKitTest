@@ -24,6 +24,7 @@
 		9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61682A2CB8526F0011E756 /* SceneDelegate.swift */; };
 		9A6168322CB852700011E756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168312CB852700011E756 /* Assets.xcassets */; };
 		9A6168352CB852700011E756 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168342CB852700011E756 /* Base */; };
+		9A97298C2CDD73C500B1F430 /* MapResultPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A97298B2CDD73C500B1F430 /* MapResultPicker.swift */; };
 		9AA133D42CD25B760023EA25 /* AppleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA133D32CD25B760023EA25 /* AppleRequest.swift */; };
 		9AA32FE42CCEDECD00F4DA32 /* MapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */; };
 		9AB99C692CD61A0800A0160E /* MapFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB99C682CD61A0800A0160E /* MapFunctions.swift */; };
@@ -50,6 +51,7 @@
 		9A6168312CB852700011E756 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A6168342CB852700011E756 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A6168362CB852700011E756 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A97298B2CDD73C500B1F430 /* MapResultPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResultPicker.swift; sourceTree = "<group>"; };
 		9AA133D32CD25B760023EA25 /* AppleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRequest.swift; sourceTree = "<group>"; };
 		9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControls.swift; sourceTree = "<group>"; };
 		9AB99C682CD61A0800A0160E /* MapFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFunctions.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */,
 				9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */,
 				9A1F03F22CD7865500CFF5F9 /* MapSheet.swift */,
+				9A97298B2CDD73C500B1F430 /* MapResultPicker.swift */,
 			);
 			path = ActivityPickerScreen;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */,
 				9A2494DD2CCA472D00E495D3 /* UIImage.swift in Sources */,
 				9AB99C6B2CD61A6500A0160E /* MapAnnotations.swift in Sources */,
+				9A97298C2CDD73C500B1F430 /* MapResultPicker.swift in Sources */,
 				9A1F03F32CD7865500CFF5F9 /* MapSheet.swift in Sources */,
 				9AA133D42CD25B760023EA25 /* AppleRequest.swift in Sources */,
 				9A37EC602CC93D4A00621DC4 /* MapView.swift in Sources */,

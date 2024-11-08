@@ -4,10 +4,13 @@ struct MapCategory: Equatable
 {
     let title: String
     let icon: String
+    var fillable: Bool = true
     let color: UIColor
     
     var appleCategories: [MKPointOfInterestCategory]? = nil
     var osmCategories: [OSMPointOfInterestCategory]? = nil
+    
+    var filledIcon: String { !fillable ? icon : "\(icon).fill"}
 
     static let allCategories: [MapCategory] =
     [
@@ -19,7 +22,7 @@ struct MapCategory: Equatable
                     appleCategories: [.park, .nationalPark],
                     osmCategories: [OSMPointOfInterestCategory("leisure", "park")]),
         
-        MapCategory(title: "Eat", icon: "fork.knife", color: .systemOrange,
+        MapCategory(title: "Eat", icon: "fork.knife", fillable: false, color: .systemOrange,
                     appleCategories: [.cafe, .restaurant, .bakery],
                     osmCategories: [
                         OSMPointOfInterestCategory("amenity", "restaurant"),
@@ -28,7 +31,7 @@ struct MapCategory: Equatable
                         OSMPointOfInterestCategory("shop", "bakery"),
                         OSMPointOfInterestCategory("shop", "pastry")]),
         
-        MapCategory(title: "Sport", icon: "volleyball", color: .systemBlue,
+        MapCategory(title: "Sport", icon: "volleyball.fill", color: .systemBlue,
                     appleCategories: [.fitnessCenter, .stadium],
                     osmCategories: [
                         OSMPointOfInterestCategory("sport"),
@@ -46,7 +49,7 @@ struct MapCategory: Equatable
                         OSMPointOfInterestCategory("tourism", "zoo"),
                         OSMPointOfInterestCategory("zoo")]),
         
-        MapCategory(title: "Amusement", icon: "laser.burst", color: .systemCyan,
+        MapCategory(title: "Amusement", icon: "laser.burst", fillable: false, color: .systemCyan,
                     appleCategories: [.amusementPark],
                     osmCategories: [
                         OSMPointOfInterestCategory("attraction", "amusement_ride"),

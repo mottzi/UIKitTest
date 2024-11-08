@@ -12,7 +12,7 @@ class MapView: UIViewController, MKMapViewDelegate
     let sheet: MapSheet = MapSheet()
     
     var lastPitch: CGFloat?
-    var ignoreMinimizeSheet: Bool? = false
+    var ignoreMinimizeSheet: Bool? = true
     
     override func viewDidLoad()
     {
