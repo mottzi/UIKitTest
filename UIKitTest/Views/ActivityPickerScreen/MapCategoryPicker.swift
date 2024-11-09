@@ -175,32 +175,22 @@ class MapCategoryPicker: UIViewController
     public func removePOI(category: MapCategory)
     {
         guard let map = map?.map else { return }
-
-        let mapAnnotations = map.annotations.filter()
+        
+        let removalGroup = DispatchGroup()
+        
+        for annotation in category.getAnnotations(on: map)
         {
-            guard let marker = $0 as? MapAnnotation else { return false }
+            removalGroup.enter()
             
-            guard let itemCategory = marker.mapCategory, itemCategory == category else { return false }
-            
-            return true
+            self.map?.removeAnnotation(annotation, animated: true)
+            {
+                removalGroup.leave()
+            }
         }
         
-        for (index, annotation) in mapAnnotations.enumerated()
-        {
-            var completion: (() -> ())? = nil
-            
-            if index == mapAnnotations.count - 1
-            {
-                completion =
-                { [weak self] in
-                    if index == mapAnnotations.count - 1
-                    {
-                        self?.map?.visibleAnnotationsWillChange()
-                    }
-                }
-            }
-            
-            self.map?.removeAnnotation(annotation, animated: true, completion: completion)
+        removalGroup.notify(queue: .main)
+        { [weak self] in
+            self?.map?.visibleAnnotationsDidChange()
         }
     }
     

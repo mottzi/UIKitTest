@@ -42,7 +42,8 @@ class MapResultCard: UICollectionViewCell
         view.layer.cornerRadius = 12
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.05
-        view.layer.shadowRadius = 5
+        view.layer.shadowRadius = 2
+        view.layer.shadowOffset = .init(width: 0, height: -1)
         return view
     }()
     
@@ -67,7 +68,7 @@ class MapResultCard: UICollectionViewCell
         NSLayoutConstraint.activate([
             container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
             icon.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
@@ -157,12 +158,12 @@ class MapResultPicker: UIViewController
             
             container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            container.topAnchor.constraint(equalTo: view.topAnchor, constant: 3),
+            container.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             container.heightAnchor.constraint(equalToConstant: 140)
         ])
     }
     
-    func updateResultPicker()
+    func update()
     {
         guard let root = parent?.parent as? MapView else { return }
         
@@ -175,10 +176,6 @@ class MapResultPicker: UIViewController
         if self.annotations.isEmpty
         {
             root.sheet.animateSheet(to: .hidden)
-//            if root.sheet.sheetState != .minimized
-//            {
-//                root.sheet.animateSheet(to: .minimized)
-//            }
         }
         else
         {

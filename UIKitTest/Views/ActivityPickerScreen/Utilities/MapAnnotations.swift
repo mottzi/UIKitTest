@@ -40,7 +40,11 @@ extension MapView
     {
         if animated
         {
-            guard let annotationView = map.view(for: annotation) else { return /*self.map.removeAnnotation(annotation)*/ }
+            guard let annotationView = map.view(for: annotation) else
+            {
+                removeAnnotation(annotation, animated: false, completion: completion)
+                return
+            }
             
             UIView.animate(withDuration: 0.5)
             {
@@ -59,3 +63,5 @@ extension MapView
         }
     }
 }
+
+#Preview { MapView() }

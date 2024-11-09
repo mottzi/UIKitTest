@@ -56,9 +56,9 @@ extension MapView
         map.setCamera(camera, animated: true)
     }
     
-    func visibleAnnotationsWillChange()
+    func visibleAnnotationsDidChange()
     {
-        sheet.content.updateResultPicker()
+        sheet.picker.update()
     }
     
     
@@ -97,7 +97,7 @@ extension MapView
             await self.picker.loadApplePOIFromRegion(categories: allCategories)
             await self.picker.loadOSMPOIFromRegion(categories: allCategories)
 
-            await self.visibleAnnotationsWillChange()
+            await self.visibleAnnotationsDidChange()
         }
     }
 }

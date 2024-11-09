@@ -28,7 +28,7 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
-    let content = MapResultPicker()
+    let picker = MapResultPicker()
 
     override func viewDidLoad()
     {
@@ -39,20 +39,20 @@ class MapSheet: UIViewController
     
     private func setupContent()
     {
-        addChild(content)
-        view.addSubview(content.view)
-        content.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(picker)
+        view.addSubview(picker.view)
+        picker.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            content.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            content.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            content.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
-            content.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            picker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            picker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            picker.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            picker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
 
-        content.didMove(toParent: self)
+        picker.didMove(toParent: self)
     }
 
     private func setupSheet()
@@ -161,23 +161,27 @@ class MapSheet: UIViewController
     func animateSheet(to finalState: SheetState)
     {
         sheetAnimator?.stopAnimation(true)
+        
+        var duration = 0.5
+        
+        if self.sheetState == .minimized && finalState == .hidden
+        {
+            duration = 1.0
+        }
+        else if self.sheetState == .maximized && finalState == .hidden
+        {
+            duration = 1.2
+        }
+        
+        self.sheetState = finalState
                 
-        sheetAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.6)
+        sheetAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.6)
         {
             self.sheetHeight?.constant = finalState.rawValue
             self.view.setNeedsLayout()
             self.parent?.view.layoutIfNeeded()
         }
-        
-        sheetAnimator?.addCompletion()
-        { [weak self] _ in
-            guard let self else { return }
-            guard sheetState != finalState else { return }
-            
-            self.sheetState = finalState
-//            self.updateSheetStateLabel()
-        }
-        
+
         sheetAnimator?.startAnimation()
     }
 }

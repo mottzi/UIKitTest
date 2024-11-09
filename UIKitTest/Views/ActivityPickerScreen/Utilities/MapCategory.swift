@@ -11,6 +11,18 @@ struct MapCategory: Equatable
     var osmCategories: [OSMPointOfInterestCategory]? = nil
     
     var filledIcon: String { !fillable ? icon : "\(icon).fill"}
+    
+    func getAnnotations(on map: MKMapView) -> [any MKAnnotation]
+    {
+        let mapAnnotations = map.annotations.filter
+        {
+            guard let marker = $0 as? MapAnnotation else { return false }
+            guard let itemCategory = marker.mapCategory, itemCategory == self else { return false }
+            return true
+        }
+        
+        return mapAnnotations
+    }
 
     static let allCategories: [MapCategory] =
     [
