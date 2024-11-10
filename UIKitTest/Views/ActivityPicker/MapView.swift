@@ -1,18 +1,10 @@
 import UIKit
 import MapKit
 
-
-/// A view that view that displayes category filtered POI on a map.
-///
-/// ### Subviews
-/// - `map (MKMapView)`: The map view (`MapKit`).
-/// - `categories`: The category picker view. Categories can be selected using the `MapCategoryPicker`.
-/// - `controls`: The map configuration can be controlled through `MapControls`.
-/// - `sheet`: The sheet that dynamically presents onscreen POI results and allows their selection.
 class MapView: UIViewController, MKMapViewDelegate
 {
     let map: MKMapView = MKMapView.create()
-    let categories: MapCategoryPicker = MapCategoryPicker()
+    let categoryPicker: MapCategoryPicker = MapCategoryPicker()
     let controls: MapControls = MapControls()
     let sheet: MapSheet = MapSheet()
     
@@ -29,43 +21,38 @@ class MapView: UIViewController, MKMapViewDelegate
         setupSubViews()
         setupView()
     }
-}
-
-// MARK: - setup - layout
-extension MapView
-{
+    
     private func setupSubViews()
     {
         location.setup(map: self)
         map.setup(parent: self)
-        categories.setup(map: self)
+        categoryPicker.setup(map: self)
         controls.setup(map: self)
     }
     
     private func setupView()
     {
-        self.addChild(categories)
+        self.addChild(categoryPicker)
         self.addChild(controls)
         self.addChild(sheet)
         
         self.view.addSubview(map)
-        self.view.addSubview(categories.view)
+        self.view.addSubview(categoryPicker.view)
         self.view.addSubview(controls.view)
         self.view.addSubview(sheet.view)
         
         map.constraints()
-        categories.constraints()
+        categoryPicker.constraints()
         controls.constraints()
         sheet.constraints()
         
-        categories.didMove(toParent: self)
+        categoryPicker.didMove(toParent: self)
         controls.didMove(toParent: self)
         sheet.didMove(toParent: self)
     }
 }
 
-// MARK: - mapView
-fileprivate extension MKMapView
+extension MKMapView
 {
     static func create() -> MKMapView
     {
@@ -97,7 +84,6 @@ fileprivate extension MKMapView
     }
 }
 
-// MARK: - preview
 #Preview
 {
     MapView()

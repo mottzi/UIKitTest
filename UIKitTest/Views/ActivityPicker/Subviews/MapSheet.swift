@@ -28,7 +28,7 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
-    let cards = MapResultPicker()
+    let resultPicker = MapResultPicker()
 
     override func viewDidLoad()
     {
@@ -39,20 +39,20 @@ class MapSheet: UIViewController
     
     private func setupContent()
     {
-        addChild(cards)
-        view.addSubview(cards.view)
-        cards.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(resultPicker)
+        view.addSubview(resultPicker.view)
+        resultPicker.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            cards.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            cards.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cards.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            cards.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            resultPicker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            resultPicker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            resultPicker.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            resultPicker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
 
-        cards.didMove(toParent: self)
+        resultPicker.didMove(toParent: self)
     }
 
     private func setupSheet()
@@ -142,7 +142,7 @@ class MapSheet: UIViewController
         let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
         let midPoint = (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
         
-        let currentIndex = Int(cards.collection.contentOffset.x / cards.collection.bounds.width)
+        let currentIndex = Int(resultPicker.collection.contentOffset.x / resultPicker.collection.bounds.width)
         
         if velocity.y > 500
         {
@@ -157,11 +157,11 @@ class MapSheet: UIViewController
         {
             animateSheet(to: .maximized)
             
-            if cards.annotations.count > 0
+            if resultPicker.annotations.count > 0
             {
-                if (0..<cards.annotations.count).contains(currentIndex)
+                if (0..<resultPicker.annotations.count).contains(currentIndex)
                 {
-                    cards.selectAnnotation(cards.annotations[currentIndex], on: root.map)
+                    root.selectAnnotation(resultPicker.annotations[currentIndex])
                 }
             }
         }
@@ -169,11 +169,11 @@ class MapSheet: UIViewController
         {
             animateSheet(to: .maximized)
             
-            if cards.annotations.count > 0
+            if resultPicker.annotations.count > 0
             {
-                if (0..<cards.annotations.count).contains(currentIndex)
+                if (0..<resultPicker.annotations.count).contains(currentIndex)
                 {
-                    cards.selectAnnotation(cards.annotations[currentIndex], on: root.map)
+                    root.selectAnnotation(resultPicker.annotations[currentIndex])
                 }
             }
         }

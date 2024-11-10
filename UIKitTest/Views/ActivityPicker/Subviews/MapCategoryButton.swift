@@ -52,7 +52,7 @@ class MapCategoryButton: UIButton
     private func toggleButton()
     {
         self.isSelected.toggle()
-        root?.categories.haptics.selectionChanged()
+        root?.categoryPicker.haptics.selectionChanged()
         
         self.configuration?.baseBackgroundColor = self.isSelected ? .buttonSelected : .buttonUnselected
                 
@@ -60,15 +60,15 @@ class MapCategoryButton: UIButton
         {
             Task.detached()
             {
-                await self.root?.categories.loadApplePOIFromRegion(categories: [self.category])
-                await self.root?.categories.loadOSMPOIFromRegion(categories: [self.category])
+                await self.root?.loadApplePOI(categories: [self.category])
+                await self.root?.loadOSMPOI(categories: [self.category])
                 
-                await self.root?.sheet.cards.update()
+                await self.root?.sheet.resultPicker.refresh()
             }
         }
         else
         {
-            self.root?.categories.removePOI(category: self.category)
+            self.root?.removeAnnotations(category: self.category)
         }
     }
     

@@ -14,14 +14,15 @@ struct MapCategory: Equatable
     
     func getAnnotations(on map: MKMapView) -> [any MKAnnotation]
     {
-        let mapAnnotations = map.annotations.filter
+        let annotations = map.annotations.filter()
         {
-            guard let marker = $0 as? MapAnnotation else { return false }
-            guard let itemCategory = marker.mapCategory, itemCategory == self else { return false }
+            guard let annotation = $0 as? MapAnnotation else { return false }
+            guard annotation.category == self else { return false }
+            
             return true
         }
         
-        return mapAnnotations
+        return annotations
     }
 
     static let allCategories: [MapCategory] =

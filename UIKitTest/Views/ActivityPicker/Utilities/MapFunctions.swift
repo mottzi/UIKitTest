@@ -2,9 +2,11 @@ import MapKit
 
 extension MapView
 {
+    // centers map on the given location
     func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
     {
         ignoreMinimizeSheet = true
+        
         if let radius
         {
             let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
@@ -19,6 +21,7 @@ extension MapView
         controls.updateLocationButton(isMapCentered: true)
     }
     
+    // toggles between 2D and 3D map modes
     func togglePitch()
     {
         controls.pitchButton.isSelected.toggle()
@@ -33,10 +36,15 @@ extension MapView
         ignoreMinimizeSheet = true
         map.setCamera(camera, animated: true)
     }
-    
+}
+
+extension MapView
+{
+    // map camera began to move:
+    // reset category picker and location button, minimize sheet, deselect annotations
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
-        categories.sortAndReset()
+        categoryPicker.sortAndReset()
         controls.updateLocationButton(isMapCentered: false)
         
         if let ignoreMinimizeSheet, ignoreMinimizeSheet == true
@@ -54,6 +62,8 @@ extension MapView
         }
     }
     
+    // map camara stopped moving:
+    // update pitch button, request fresh POI and refresh result picker in bottom sheet
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
         let currentPitch = mapView.camera.pitch
@@ -67,55 +77,11 @@ extension MapView
         
         Task.detached()
         {
-            let allCategories = await self.categories.getSelectedCategories()
-            await self.categories.loadApplePOIFromRegion(categories: allCategories)
-            await self.categories.loadOSMPOIFromRegion(categories: allCategories)
+            let allCategories = await self.categoryPicker.getSelectedCategories()
+            await self.loadApplePOI(categories: allCategories)
+            await self.loadOSMPOI(categories: allCategories)
 
-            await self.sheet.cards.update()
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation)
-    {
-        guard let annotation = annotation as? MapAnnotation else { return }
-        
-        guard let index = sheet.cards.annotations.firstIndex(where: { $0.identifier == annotation.identifier }) else { return }
-                
-        let targetOffset = CGFloat(index) * sheet.cards.collection.bounds.width
-        sheet.cards.collection.setContentOffset(CGPoint(x: targetOffset, y: 0), animated: false)
-        sheet.cards.lastSelectedAnnotation = annotation
-        
-        if let ignoreDelegate, ignoreDelegate == true
-        {
-            self.ignoreDelegate = false
-        }
-        else
-        {
-            if sheet.sheetState != .maximized { sheet.animateSheet(to: .maximized) }
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView)
-    {        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
-        {
-            let count = self.sheet.cards.getVisibleAnnotations(map: self.map).count
-            
-            if count == 0
-            {
-                if self.sheet.sheetState != .hidden { self.sheet.animateSheet(to: .hidden) }
-            }
-            else
-            {
-                if self.sheet.sheetState != .minimized
-                {
-                    if self.map.selectedAnnotations.count == 0
-                    {
-                        self.sheet.animateSheet(to: .minimized)
-                    }
-                }
-            }
-            
+            await self.sheet.resultPicker.refresh()
         }
     }
 }
