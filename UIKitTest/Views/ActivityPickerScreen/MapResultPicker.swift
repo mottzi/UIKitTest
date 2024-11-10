@@ -37,7 +37,7 @@ class MapResultCard: UICollectionViewCell
     {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .tertiarySystemBackground
+        view.backgroundColor = .tertiarySystemBackground.withAlphaComponent(0.7)
         view.clipsToBounds = false
         view.layer.cornerRadius = 12
         view.layer.shadowColor = UIColor.black.cgColor
@@ -72,7 +72,7 @@ class MapResultCard: UICollectionViewCell
             container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
             icon.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            icon.centerYAnchor.constraint(equalTo: title.centerYAnchor),
+            icon.bottomAnchor.constraint(equalTo: title.bottomAnchor),
             icon.widthAnchor.constraint(equalToConstant: 24),
             icon.heightAnchor.constraint(equalToConstant: 24),
             
@@ -264,7 +264,7 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
         }
     }
     
-    private func handleScrollEnd()
+    func handleScrollEnd()
     {
         guard let root = parent?.parent as? MapView else { return }
         

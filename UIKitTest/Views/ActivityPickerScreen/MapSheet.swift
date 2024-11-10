@@ -9,7 +9,7 @@ enum SheetState: CGFloat
     static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
     
     static let cornerRadius: CGFloat = 0
-    static let maxStretchHeight: CGFloat = 30
+    static let maxStretchHeight: CGFloat = 35
     static let stretchResistance: CGFloat = 0.5
 }
 

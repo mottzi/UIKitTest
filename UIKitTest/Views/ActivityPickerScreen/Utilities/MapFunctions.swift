@@ -45,7 +45,12 @@ extension MapView
         }
         else
         {
-            if sheet.sheetState != .minimized { sheet.animateSheet(to: .minimized) }
+            if sheet.sheetState == .maximized { sheet.animateSheet(to: .minimized) }
+        }
+        
+        map.selectedAnnotations.forEach()
+        {
+            map.deselectAnnotation($0, animated: true)
         }
     }
     
@@ -94,8 +99,23 @@ extension MapView
     {        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
         {
-            guard mapView.selectedAnnotations.count == 0 else { return }
-            if self.sheet.sheetState != .hidden { self.sheet.animateSheet(to: .hidden) }
+            let count = self.sheet.cards.getVisibleAnnotations(map: self.map).count
+            
+            if count == 0
+            {
+                if self.sheet.sheetState != .hidden { self.sheet.animateSheet(to: .hidden) }
+            }
+            else
+            {
+                if self.sheet.sheetState != .minimized
+                {
+                    if self.map.selectedAnnotations.count == 0
+                    {
+                        self.sheet.animateSheet(to: .minimized)
+                    }
+                }
+            }
+            
         }
     }
 }
