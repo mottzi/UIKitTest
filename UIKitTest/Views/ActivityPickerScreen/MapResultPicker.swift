@@ -89,8 +89,8 @@ class MapResultCard: UICollectionViewCell
     
     func configure(with annotation: MapAnnotation)
     {
-        title.text = annotation.title ?? "Unknown Location"
-        body.text = annotation.subtitle ?? "No description available"
+        title.text = annotation.title ?? "?"
+        body.text = "Point source: \(annotation.source ?? "?")"
         
         if let category = annotation.mapCategory
         {
@@ -110,9 +110,12 @@ class MapResultCard: UICollectionViewCell
 // MARK: - HStack
 class MapResultPicker: UIViewController
 {
-    private var annotations: [MapAnnotation] = []
+    var annotations: [MapAnnotation] = []
     
-    private lazy var container: UICollectionView =
+    private var currentAnnotationIds: Set<String> = []
+    var lastSelectedAnnotation: MapAnnotation?
+
+    lazy var collection: UICollectionView =
     {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -131,15 +134,6 @@ class MapResultPicker: UIViewController
         return collection
     }()
     
-//    private let pageControl: UIPageControl =
-//    {
-//        let pageControl = UIPageControl()
-//        pageControl.translatesAutoresizingMaskIntoConstraints = false
-//        pageControl.currentPageIndicatorTintColor = .label
-//        pageControl.pageIndicatorTintColor = .tertiaryLabel
-//        return pageControl
-//    }()
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -148,42 +142,99 @@ class MapResultPicker: UIViewController
     
     private func setupViews()
     {
-//        view.addSubview(pageControl)
-        view.addSubview(container)
+        view.addSubview(collection)
         
         NSLayoutConstraint.activate([
-//            pageControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 2),
-//            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            pageControl.heightAnchor.constraint(equalToConstant: 14),
-            
-            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            container.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            container.heightAnchor.constraint(equalToConstant: 140)
+            collection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collection.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            collection.heightAnchor.constraint(equalToConstant: 140)
         ])
     }
     
+    // Reloads collection data after fetching currently visible POI.
+    // * is called when category is toggled or map region did changed
     func update()
     {
         guard let root = parent?.parent as? MapView else { return }
         
-        let visibleAnnotations = root.map.annotations(in: root.map.visibleMapRect).compactMap { $0 as? MapAnnotation }
-
-        self.annotations = visibleAnnotations
+        let newAnnotations = getVisibleAnnotations(map: root.map)
+        let newAnnotationIds = Set(newAnnotations.compactMap { $0.identifier })
         
-        container.reloadData()
-
-        if self.annotations.isEmpty
+        if newAnnotationIds != currentAnnotationIds
         {
-            root.sheet.animateSheet(to: .hidden)
+            let cardIndex = Int(collection.contentOffset.x / collection.bounds.width)
+            var currentAnnotation: MapAnnotation?
+            
+            if (0..<annotations.count).contains(cardIndex)
+            {
+                currentAnnotation = annotations[cardIndex]
+            }
+            
+            // Sort new annotations, but prioritize current annotation if it exists
+            self.annotations = newAnnotations.sorted()
+            {
+                // If a1 is the current annotation, it should come first
+                if $0.identifier == currentAnnotation?.identifier { return true }
+                // If a2 is the current annotation, it should come first
+                if $1.identifier == currentAnnotation?.identifier { return false }
+                
+                guard let id1 = $0.title, let id2 = $1.title else { return false }
+                // Otherwise sort by title as before
+                return id1 < id2
+            }
+            
+            currentAnnotationIds = newAnnotationIds
+            
+            // Reload and scroll to beginning
+            collection.reloadData()
+            collection.setContentOffset(.zero, animated: false)
+        }
+        
+        handleSheetAfterUpdate(sheet: root.sheet)
+    }
+    
+    func selectAnnotation(_ annotation: MapAnnotation, on mapView: MKMapView, ignore ignoreDelegate: Bool = false)
+    {
+        if let last = lastSelectedAnnotation, last !== annotation
+        {
+            mapView.deselectAnnotation(last, animated: true)
+        }
+        
+        if ignoreDelegate
+        {
+            if let root = parent?.parent as? MapView
+            {
+                root.ignoreDelegate = true
+                mapView.selectAnnotation(annotation, animated: true)
+            }
         }
         else
         {
-            if root.sheet.sheetState == .hidden
+            mapView.selectAnnotation(annotation, animated: true)
+        }
+        
+        lastSelectedAnnotation = annotation
+    }
+    
+    func handleSheetAfterUpdate(sheet: MapSheet)
+    {
+        if self.annotations.isEmpty
+        {
+            sheet.animateSheet(to: .hidden)
+        }
+        else
+        {
+            if sheet.sheetState == .hidden
             {
-                root.sheet.animateSheet(to: .minimized)
+                sheet.animateSheet(to: .minimized)
             }
         }
+    }
+    
+    func getVisibleAnnotations(map: MKMapView) -> [MapAnnotation]
+    {
+        return map.annotations(in: map.visibleMapRect).compactMap { $0 as? MapAnnotation }
     }
 }
 
@@ -202,11 +253,32 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
         return cell
     }
     
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
-//    {
-//        let page = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-//        pageControl.currentPage = page
-//    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        handleScrollEnd()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate
+        {
+            handleScrollEnd()
+        }
+    }
+    
+    private func handleScrollEnd()
+    {
+        guard let root = parent?.parent as? MapView else { return }
+        
+        if root.sheet.sheetState == .maximized
+        {
+            let page = Int(collection.contentOffset.x / collection.bounds.width)
+            
+            if (0..<annotations.count).contains(page)
+            {
+                print("selecting")
+                selectAnnotation(annotations[page], on: root.map, ignore: true)
+            }
+        }
+    }
 }
 
 #Preview

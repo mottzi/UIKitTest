@@ -5,6 +5,15 @@ class MapAnnotation: MKPointAnnotation
     var mapCategory: MapCategory?
     var identifier: String?
     var color: UIColor?
+    var source: String?
+    
+    static func == (lhs: MapAnnotation, rhs: MapAnnotation) -> Bool
+    {
+        guard let lid = lhs.identifier else { return false }
+        guard let rid = rhs.identifier else { return false }
+
+        return lid == rid
+    }
 }
 
 extension MapView

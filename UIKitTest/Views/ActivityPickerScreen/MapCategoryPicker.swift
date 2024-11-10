@@ -75,7 +75,7 @@ class MapCategoryPicker: UIViewController
     {
         for category in MapCategory.allCategories
         {
-            let button = MapCategoryButton(category: category, picker: self)
+            let button = MapCategoryButton(category: category, root: map)
             view.addArrangedSubview(button)
         }
     }
@@ -159,6 +159,7 @@ class MapCategoryPicker: UIViewController
                     if !exists
                     {
                         let marker = MapAnnotation()
+                        marker.source = "Apple"
                         marker.identifier = poi.mapItem.identifier?.rawValue
                         marker.mapCategory = category
                         marker.coordinate = poi.mapItem.placemark.coordinate
@@ -174,11 +175,11 @@ class MapCategoryPicker: UIViewController
     
     public func removePOI(category: MapCategory)
     {
-        guard let map = map?.map else { return }
+        guard let root = parent as? MapView else { return }
         
         let removalGroup = DispatchGroup()
         
-        for annotation in category.getAnnotations(on: map)
+        for annotation in category.getAnnotations(on: root.map)
         {
             removalGroup.enter()
             
@@ -189,8 +190,8 @@ class MapCategoryPicker: UIViewController
         }
         
         removalGroup.notify(queue: .main)
-        { [weak self] in
-            self?.map?.visibleAnnotationsDidChange()
+        {
+            root.sheet.cards.update()
         }
     }
     
@@ -227,6 +228,7 @@ class MapCategoryPicker: UIViewController
                     if !exists
                     {
                         let marker = MapAnnotation()
+                        marker.source = "OSM"
                         marker.identifier = "\(poi.hashValue)"
                         marker.mapCategory = category
                         marker.coordinate = poi.coordinate

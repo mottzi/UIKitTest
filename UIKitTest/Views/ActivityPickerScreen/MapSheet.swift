@@ -28,7 +28,7 @@ class MapSheet: UIViewController
         return blurEffectView
     }()
     
-    let picker = MapResultPicker()
+    let cards = MapResultPicker()
 
     override func viewDidLoad()
     {
@@ -39,20 +39,20 @@ class MapSheet: UIViewController
     
     private func setupContent()
     {
-        addChild(picker)
-        view.addSubview(picker.view)
-        picker.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(cards)
+        view.addSubview(cards.view)
+        cards.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            picker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            picker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            picker.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            picker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            cards.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            cards.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            cards.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            cards.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
 
-        picker.didMove(toParent: self)
+        cards.didMove(toParent: self)
     }
 
     private func setupSheet()
@@ -137,24 +137,48 @@ class MapSheet: UIViewController
     
     private func handleGestureEnded(_ velocity: CGPoint)
     {
+        guard let root = parent as? MapView else { return }
+        
         let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
         let midPoint = (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
+        
+        let currentIndex = Int(cards.collection.contentOffset.x / cards.collection.bounds.width)
         
         if velocity.y > 500
         {
             animateSheet(to: .minimized)
+            
+            root.map.selectedAnnotations.removeAll()
         }
         else if velocity.y < -500
         {
             animateSheet(to: .maximized)
+            
+            if cards.annotations.count > 0
+            {
+                if (0..<cards.annotations.count).contains(currentIndex)
+                {
+                    cards.selectAnnotation(cards.annotations[currentIndex], on: root.map)
+                }
+            }
         }
         else if currentHeight > midPoint
         {
             animateSheet(to: .maximized)
+            
+            if cards.annotations.count > 0
+            {
+                if (0..<cards.annotations.count).contains(currentIndex)
+                {
+                    cards.selectAnnotation(cards.annotations[currentIndex], on: root.map)
+                }
+            }
         }
         else
         {
             animateSheet(to: .minimized)
+            
+            root.map.selectedAnnotations.removeAll()
         }
     }
     

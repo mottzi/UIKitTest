@@ -1,18 +1,26 @@
 import UIKit
 import MapKit
 
-// MARK: - init
+
+/// A view that view that displayes category filtered POI on a map.
+///
+/// ### Subviews
+/// - `map (MKMapView)`: The map view (`MapKit`).
+/// - `categories`: The category picker view. Categories can be selected using the `MapCategoryPicker`.
+/// - `controls`: The map configuration can be controlled through `MapControls`.
+/// - `sheet`: The sheet that dynamically presents onscreen POI results and allows their selection.
 class MapView: UIViewController, MKMapViewDelegate
 {
     let map: MKMapView = MKMapView.create()
-    let location: MapLocation = MapLocation()
-    
-    let picker: MapCategoryPicker = MapCategoryPicker()
+    let categories: MapCategoryPicker = MapCategoryPicker()
     let controls: MapControls = MapControls()
     let sheet: MapSheet = MapSheet()
     
+    let location: MapLocation = MapLocation()
+
     var lastPitch: CGFloat?
     var ignoreMinimizeSheet: Bool? = true
+    var ignoreDelegate: Bool? = false
     
     override func viewDidLoad()
     {
@@ -30,27 +38,27 @@ extension MapView
     {
         location.setup(map: self)
         map.setup(parent: self)
-        picker.setup(map: self)
+        categories.setup(map: self)
         controls.setup(map: self)
     }
     
     private func setupView()
     {
-        self.addChild(picker)
+        self.addChild(categories)
         self.addChild(controls)
         self.addChild(sheet)
         
         self.view.addSubview(map)
-        self.view.addSubview(picker.view)
+        self.view.addSubview(categories.view)
         self.view.addSubview(controls.view)
         self.view.addSubview(sheet.view)
         
         map.constraints()
-        picker.constraints()
+        categories.constraints()
         controls.constraints()
         sheet.constraints()
         
-        picker.didMove(toParent: self)
+        categories.didMove(toParent: self)
         controls.didMove(toParent: self)
         sheet.didMove(toParent: self)
     }

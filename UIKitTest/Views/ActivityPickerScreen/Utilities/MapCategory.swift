@@ -43,7 +43,7 @@ struct MapCategory: Equatable
                         OSMPointOfInterestCategory("shop", "bakery"),
                         OSMPointOfInterestCategory("shop", "pastry")]),
         
-        MapCategory(title: "Sport", icon: "volleyball.fill", color: .systemBlue,
+        MapCategory(title: "Sport", icon: "volleyball", color: .systemBlue,
                     appleCategories: [.fitnessCenter, .stadium],
                     osmCategories: [
                         OSMPointOfInterestCategory("sport"),

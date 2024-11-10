@@ -5,12 +5,12 @@ class MapCategoryButton: UIButton
 {
     let category: MapCategory
     
-    weak var picker: MapCategoryPicker?
+    weak var root: MapView?
     
-    init(category: MapCategory, picker: MapCategoryPicker?)
+    init(category: MapCategory, root: MapView?)
     {
         self.category = category
-        self.picker = picker
+        self.root = root
 
         super.init(frame: .zero)
         
@@ -52,7 +52,7 @@ class MapCategoryButton: UIButton
     private func toggleButton()
     {
         self.isSelected.toggle()
-        picker?.haptics.selectionChanged()
+        root?.categories.haptics.selectionChanged()
         
         self.configuration?.baseBackgroundColor = self.isSelected ? .buttonSelected : .buttonUnselected
                 
@@ -60,14 +60,15 @@ class MapCategoryButton: UIButton
         {
             Task.detached()
             {
-                await self.picker?.loadApplePOIFromRegion(categories: [self.category])
-                await self.picker?.loadOSMPOIFromRegion(categories: [self.category])
-                await self.picker?.map?.visibleAnnotationsDidChange()
+                await self.root?.categories.loadApplePOIFromRegion(categories: [self.category])
+                await self.root?.categories.loadOSMPOIFromRegion(categories: [self.category])
+                
+                await self.root?.sheet.cards.update()
             }
         }
         else
         {
-            self.picker?.removePOI(category: self.category)
+            self.root?.categories.removePOI(category: self.category)
         }
     }
     
