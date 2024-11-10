@@ -45,10 +45,7 @@ extension MapView
         }
         else
         {
-            if sheet.sheetState == .maximized
-            {
-                sheet.animateSheet(to: .minimized)
-            }
+            if sheet.sheetState != .minimized { sheet.animateSheet(to: .minimized) }
         }
     }
     
@@ -98,7 +95,7 @@ extension MapView
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
         {
             guard mapView.selectedAnnotations.count == 0 else { return }
-            if self.sheet.sheetState != .minimized { self.sheet.animateSheet(to: .minimized) }
+            if self.sheet.sheetState != .hidden { self.sheet.animateSheet(to: .hidden) }
         }
     }
 }

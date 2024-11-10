@@ -148,7 +148,10 @@ class MapSheet: UIViewController
         {
             animateSheet(to: .minimized)
             
-            root.map.selectedAnnotations.removeAll()
+            root.map.selectedAnnotations.forEach()
+            {
+                root.map.deselectAnnotation($0, animated: true)
+            }
         }
         else if velocity.y < -500
         {
@@ -178,7 +181,10 @@ class MapSheet: UIViewController
         {
             animateSheet(to: .minimized)
             
-            root.map.selectedAnnotations.removeAll()
+            root.map.selectedAnnotations.forEach()
+            {
+                root.map.deselectAnnotation($0, animated: true)
+            }
         }
     }
     
@@ -187,19 +193,27 @@ class MapSheet: UIViewController
         sheetAnimator?.stopAnimation(true)
         
         var duration = 0.5
+        var damping = 0.6
         
         if self.sheetState == .minimized && finalState == .hidden
         {
             duration = 1.0
+            damping = 1.0
         }
         else if self.sheetState == .maximized && finalState == .hidden
         {
             duration = 1.2
+            damping = 1.0
+        }
+        else if self.sheetState == .hidden && finalState == .minimized
+        {
+            duration = 1.0
+            damping = 1.0
         }
         
         self.sheetState = finalState
                 
-        sheetAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.6)
+        sheetAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: damping)
         {
             self.sheetHeight?.constant = finalState.rawValue
             self.view.setNeedsLayout()
