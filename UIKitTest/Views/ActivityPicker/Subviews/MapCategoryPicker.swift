@@ -1,5 +1,65 @@
 import UIKit
 
+class MapCategoryPicker: UIViewController
+{
+    public let haptics = UISelectionFeedbackGenerator()
+    
+    weak var map: MapView?
+    
+    let scrollview: UIScrollView = UIScrollView()
+    let stackview: UIStackView = UIStackView()
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        
+        setupSubViews()
+    }
+    
+    private func setupSubViews()
+    {
+        scrollview.showsHorizontalScrollIndicator = false
+        scrollview.translatesAutoresizingMaskIntoConstraints = false
+        scrollview.layer.masksToBounds = false
+        
+        stackview.axis = .horizontal
+        stackview.spacing = 8
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        
+        loadButtons(into: stackview)
+        scrollview.addSubview(stackview)
+        
+        view.addSubview(scrollview)
+        setupConstraints()
+    }
+    
+    private func setupConstraints()
+    {
+        NSLayoutConstraint.activate([
+            scrollview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollview.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            stackview.leadingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.leadingAnchor, constant: 12),
+            stackview.trailingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.trailingAnchor, constant: -12),
+            stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
+            
+            self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 0)
+        ])
+    }
+    
+    // adds all category buttons to the stack
+    private func loadButtons(into view: UIStackView)
+    {
+        for category in MapCategory.allCategories
+        {
+            let button = MapCategoryButton(category: category, root: map)
+            view.addArrangedSubview(button)
+        }
+    }
+}
+
 extension MapCategoryPicker
 {
     func setup(map: MapView)
@@ -20,66 +80,20 @@ extension MapCategoryPicker
     }
 }
 
-class MapCategoryPicker: UIViewController
+extension MapCategoryPicker
 {
-    public let haptics = UISelectionFeedbackGenerator()
-    
-    weak var map: MapView?
-    
-    private lazy var scrollview: UIScrollView =
+    // returns an array of selected category buttons
+    func getSelectedCategories() -> [MapCategory]
     {
-        let scrollview = UIScrollView()
-        scrollview.showsHorizontalScrollIndicator = false
-        scrollview.translatesAutoresizingMaskIntoConstraints = false
-        scrollview.layer.masksToBounds = false
-        return scrollview
-    }()
-    
-    private lazy var stackview: UIStackView =
-    {
-        let stackview = UIStackView()
-        stackview.axis = .horizontal
-        stackview.spacing = 8
-        stackview.translatesAutoresizingMaskIntoConstraints = false
-        return stackview
-    }()
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
+        let selectedCategories = stackview.arrangedSubviews.compactMap { $0 as? MapCategoryButton }
+            .filter { $0.isSelected }
+            .map { $0.category }
         
-        loadButtons(into: stackview)
-        scrollview.addSubview(stackview)
-        
-        self.view.addSubview(scrollview)
-        
-        NSLayoutConstraint.activate(controlConstraints)
+        return selectedCategories
     }
     
-    private lazy var controlConstraints: [NSLayoutConstraint] =
-    [
-        scrollview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        scrollview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        scrollview.topAnchor.constraint(equalTo: view.topAnchor),
-        scrollview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        
-        stackview.leadingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.leadingAnchor, constant: 12),
-        stackview.trailingAnchor.constraint(equalTo: scrollview.contentLayoutGuide.trailingAnchor, constant: -12),
-        stackview.topAnchor.constraint(equalTo: scrollview.contentLayoutGuide.topAnchor),
-                
-        self.view.heightAnchor.constraint(equalTo: stackview.heightAnchor, constant: 0)
-    ]
-    
-    private func loadButtons(into view: UIStackView)
-    {
-        for category in MapCategory.allCategories
-        {
-            let button = MapCategoryButton(category: category, root: map)
-            view.addArrangedSubview(button)
-        }
-    }
-    
-    public func sortButtons()
+    // sorts the category buttons inside the stack based on selection status
+    func sortButtons()
     {
         let buttons = stackview.arrangedSubviews.compactMap { $0 as? MapCategoryButton }
         let sortedButtons = buttons.sorted { $0.isSelected && !$1.isSelected }
@@ -93,21 +107,14 @@ class MapCategoryPicker: UIViewController
         stackview.layoutIfNeeded()
     }
     
-    public func getSelectedCategories() -> [MapCategory]
-    {
-        let selectedCategories = stackview.arrangedSubviews.compactMap { $0 as? MapCategoryButton }
-            .filter { $0.isSelected }
-            .map { $0.category }
-        
-        return selectedCategories
-    }
-    
-    public func resetOffset()
+    // scrolls to the start of the button stack
+    func resetOffset()
     {
         scrollview.setContentOffset(.zero, animated: false)
     }
     
-    public func sortAndReset(animated: Bool = true)
+    // sort buttons and scroll to start
+    func reset(animated: Bool = true)
     {
         if animated
         {
@@ -124,7 +131,8 @@ class MapCategoryPicker: UIViewController
         }
     }
     
-    func isButtonSelected(category: MapCategory) -> Bool
+    // returns true if the category button has been selected
+    func isCategorySelected(category: MapCategory) -> Bool
     {
         let button = stackview.arrangedSubviews
             .compactMap { $0 as? MapCategoryButton }

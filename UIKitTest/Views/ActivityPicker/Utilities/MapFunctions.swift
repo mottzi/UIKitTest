@@ -44,7 +44,7 @@ extension MapView
     // reset category picker and location button, minimize sheet, deselect annotations
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
-        categoryPicker.sortAndReset()
+        categoryPicker.reset()
         controls.updateLocationButton(isMapCentered: false)
         
         if let ignoreMinimizeSheet, ignoreMinimizeSheet == true
@@ -78,8 +78,9 @@ extension MapView
         Task.detached()
         {
             let allCategories = await self.categoryPicker.getSelectedCategories()
-            await self.loadApplePOI(categories: allCategories)
-            await self.loadOSMPOI(categories: allCategories)
+            
+            await self.requestAnnotations(categories: allCategories, from: .apple)
+            await self.requestAnnotations(categories: allCategories, from: .osm)
 
             await self.sheet.resultPicker.refresh()
         }

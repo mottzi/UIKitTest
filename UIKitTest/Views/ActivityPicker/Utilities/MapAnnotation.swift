@@ -109,7 +109,7 @@ extension MapView
             let marker = MapAnnotation(identifier: item.mapItem.identifier?.rawValue ?? "",
                                        mapCategory: category,
                                        color: category.color,
-                                       source: "Apple")
+                                       source: MapRequestSource.apple.rawValue)
             
             marker.coordinate = item.mapItem.placemark.coordinate
             marker.title = item.mapItem.name
@@ -133,7 +133,7 @@ extension MapView
             let marker = MapAnnotation(identifier: "\(item.hashValue)",
                                        mapCategory: category,
                                        color: category.color,
-                                       source: "OSM")
+                                       source: MapRequestSource.osm.rawValue)
             
             marker.coordinate = item.coordinate
             marker.title = item.name
@@ -164,6 +164,7 @@ extension MapView
     }
 }
 
+// selection
 extension MapView
 {
     // handle user selection of an annotation
@@ -213,10 +214,33 @@ extension MapView
     }
 }
 
+// API requests
 extension MapView
 {
+    enum MapRequestSource: String
+    {
+        case apple = "Apple"
+        case osm = "OpenStreetMap"
+    }
+    
+    // loads and adds results as map annotations
+    func requestAnnotations(categories: [MapCategory], from source: MapRequestSource) async
+    {
+        switch source
+        {
+            case .apple: await requestAppleAnnotations(categories: categories)
+            case .osm: await requestOSMAnnotations(categories: categories)
+        }
+    }
+    
+    // convenience
+    func requestAnnotations(category: MapCategory, from source: MapRequestSource) async
+    {
+        await requestAnnotations(categories: [category], from: source)
+    }
+    
     // loads POI from Apple and adds results as map annotations
-    func loadApplePOI(categories: [MapCategory]) async
+    func requestAppleAnnotations(categories: [MapCategory]) async
     {
         for category in categories
         {
@@ -224,7 +248,7 @@ extension MapView
             
             guard let foundItems = await request.start() else { continue }
             
-            if !categoryPicker.isButtonSelected(category: category) { continue }
+            if !categoryPicker.isCategorySelected(category: category) { continue }
             
             DispatchQueue.main.async
             {
@@ -237,7 +261,7 @@ extension MapView
     }
     
     // loads POI from OSM and adds results as map annotations
-    func loadOSMPOI(categories: [MapCategory]) async
+    func requestOSMAnnotations(categories: [MapCategory]) async
     {
         for category in categories
         {
@@ -245,7 +269,7 @@ extension MapView
             
             guard let foundItems = await request.start() else { continue }
             
-            if !categoryPicker.isButtonSelected(category: category) { continue }
+            if !categoryPicker.isCategorySelected(category: category) { continue }
             
             DispatchQueue.main.async
             {

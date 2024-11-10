@@ -60,9 +60,9 @@ class MapCategoryButton: UIButton
         {
             Task.detached()
             {
-                await self.root?.loadApplePOI(categories: [self.category])
-                await self.root?.loadOSMPOI(categories: [self.category])
-                
+                await self.root?.requestAnnotations(category: self.category, from: .apple)
+                await self.root?.requestAnnotations(category: self.category, from: .osm)
+
                 await self.root?.sheet.resultPicker.refresh()
             }
         }
