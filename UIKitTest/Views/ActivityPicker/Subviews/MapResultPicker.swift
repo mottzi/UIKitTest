@@ -1,13 +1,10 @@
 import UIKit
 import MapKit
 
-// MARK: - HStack
 class MapResultPicker: UIViewController
 {
     var annotations: [MapAnnotation] = []
-    
-    private var currentAnnotationIds: Set<String> = []
-    var lastSelectedAnnotation: MapAnnotation?
+    var currentAnnotationIds: Set<String> = []
 
     lazy var collection: UICollectionView =
     {
@@ -101,7 +98,6 @@ class MapResultPicker: UIViewController
     }
 }
 
-// MARK: - Collection View Delegate & DataSource
 extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
@@ -137,7 +133,7 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
             
             if (0..<annotations.count).contains(page)
             {
-                root.selectAnnotation(annotations[page]/*, ignore: true*/)
+                root.map.selectAnnotation(annotations[page], animated: true)
             }
         }
     }

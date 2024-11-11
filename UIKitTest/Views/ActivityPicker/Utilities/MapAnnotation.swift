@@ -142,19 +142,6 @@ extension ActivityPicker
         }
     }
     
-    // selects the provided annotation programmatically
-    func selectAnnotation(_ annotation: MapAnnotation)
-    {
-        if let last = sheet.resultPicker.lastSelectedAnnotation, last !== annotation
-        {
-            map.deselectAnnotation(last, animated: true)
-        }
-        
-        map.selectAnnotation(annotation, animated: true)
-        
-        sheet.resultPicker.lastSelectedAnnotation = annotation
-    }
-    
     // selects the annotation that corresponds to the currently selected POI in the result picker
     func selectAnnotationOfResult()
     {
@@ -164,7 +151,7 @@ extension ActivityPicker
             
             if (0..<sheet.resultPicker.annotations.count).contains(currentIndex)
             {
-                self.selectAnnotation(sheet.resultPicker.annotations[currentIndex])
+                self.map.selectAnnotation(sheet.resultPicker.annotations[currentIndex], animated: true)
             }
         }
     }
@@ -191,7 +178,6 @@ extension ActivityPicker
         
         let targetOffset = CGFloat(index) * sheet.resultPicker.collection.bounds.width
         sheet.resultPicker.collection.setContentOffset(CGPoint(x: targetOffset, y: 0), animated: false)
-        sheet.resultPicker.lastSelectedAnnotation = annotation
         
         if sheet.state != .maximized { sheet.animateSheet(to: .maximized) }
     }

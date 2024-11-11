@@ -1,30 +1,16 @@
 import UIKit
 
-enum SheetState: CGFloat
-{
-    case hidden = 0
-    case minimized = 110
-    case maximized = 190
-    
-    static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
-    static let midPoint: CGFloat = (maximized.rawValue + minimized.rawValue) / 2
-    
-    static let cornerRadius: CGFloat = 0
-    static let maxStretchHeight: CGFloat = 35
-    static let stretchResistance: CGFloat = 0.5
-}
-
 class MapSheet: UIViewController
 {
     weak var map: ActivityPicker?
+    
+    let resultPicker = MapResultPicker()
 
     var state: SheetState = .hidden
     var height: NSLayoutConstraint?
     var animator: UIViewPropertyAnimator?
     let gesture = UIPanGestureRecognizer()
     
-    let resultPicker = MapResultPicker()
-
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -32,7 +18,7 @@ class MapSheet: UIViewController
         setupContent()
     }
     
-    // animates the sheet to the new state
+    // animates the sheet to the specified height state
     func animateSheet(to finalState: SheetState)
     {
         animator?.stopAnimation(true)
@@ -201,6 +187,20 @@ extension MapSheet
         
         resultPicker.didMove(toParent: self)
     }
+}
+
+enum SheetState: CGFloat
+{
+    case hidden = 0
+    case minimized = 110
+    case maximized = 190
+    
+    static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
+    static let midPoint: CGFloat = (maximized.rawValue + minimized.rawValue) / 2
+    
+    static let cornerRadius: CGFloat = 0
+    static let maxStretchHeight: CGFloat = 35
+    static let stretchResistance: CGFloat = 0.5
 }
 
 #Preview
