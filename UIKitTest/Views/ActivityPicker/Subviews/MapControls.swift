@@ -60,10 +60,17 @@ class MapControls: UIViewController
         
         let action = UIAction 
         { [weak self] _ in
-            self?.map?.location.requestLocation(reason: .locationButtonTapped)
-            
-            guard let lastLocation = self?.map?.location.location else { return }
-            self?.map?.centerMap(on: lastLocation)
+            if let lastLocation = self?.map?.location.location
+            {
+                if Date().timeIntervalSince(lastLocation.timestamp) <= 15
+                {
+                    self?.map?.centerMap(on: lastLocation)
+                }
+            }
+            else
+            {
+                self?.map?.location.requestLocation(reason: .locationButtonTapped)
+            }
         }
         
         button.addAction(action, for: .touchUpInside)
