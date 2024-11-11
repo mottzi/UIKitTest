@@ -143,22 +143,14 @@ extension MapView
     }
     
     // selects the provided annotation programmatically
-    func selectAnnotation(_ annotation: MapAnnotation, ignore ignoreDelegate: Bool = false)
+    func selectAnnotation(_ annotation: MapAnnotation)
     {
         if let last = sheet.resultPicker.lastSelectedAnnotation, last !== annotation
         {
             map.deselectAnnotation(last, animated: true)
         }
         
-        if ignoreDelegate
-        {
-            self.ignoreDelegate = true
-            map.selectAnnotation(annotation, animated: true)
-        }
-        else
-        {
-            map.selectAnnotation(annotation, animated: true)
-        }
+        map.selectAnnotation(annotation, animated: true)
         
         sheet.resultPicker.lastSelectedAnnotation = annotation
     }
@@ -178,14 +170,7 @@ extension MapView
         sheet.resultPicker.collection.setContentOffset(CGPoint(x: targetOffset, y: 0), animated: false)
         sheet.resultPicker.lastSelectedAnnotation = annotation
         
-        if let ignoreDelegate, ignoreDelegate == true
-        {
-            self.ignoreDelegate = false
-        }
-        else
-        {
-            if sheet.sheetState != .maximized { sheet.animateSheet(to: .maximized) }
-        }
+        if sheet.sheetState != .maximized { sheet.animateSheet(to: .maximized) }
     }
     
     // handle user deselection of an annotation

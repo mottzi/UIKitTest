@@ -5,8 +5,6 @@ extension MapView
     // centers map on the given location
     func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
     {
-        ignoreMinimizeSheet = true
-        
         if let radius
         {
             let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
@@ -33,7 +31,6 @@ extension MapView
             heading: map.camera.heading
         )
         
-        ignoreMinimizeSheet = true
         map.setCamera(camera, animated: true)
     }
 }
@@ -47,14 +44,7 @@ extension MapView
         categoryPicker.reset()
         controls.updateLocationButton(isMapCentered: false)
         
-        if let ignoreMinimizeSheet, ignoreMinimizeSheet == true
-        {
-            self.ignoreMinimizeSheet = false
-        }
-        else
-        {
-            if sheet.sheetState == .maximized { sheet.animateSheet(to: .minimized) }
-        }
+        if sheet.sheetState == .maximized { sheet.animateSheet(to: .minimized) }
         
         map.selectedAnnotations.forEach()
         {

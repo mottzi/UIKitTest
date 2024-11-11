@@ -5,12 +5,12 @@ class MapCategoryButton: UIButton
 {
     let category: MapCategory
     
-    weak var root: MapView?
+    weak var map: MapView?
     
     init(category: MapCategory, root: MapView?)
     {
         self.category = category
-        self.root = root
+        self.map = root
 
         super.init(frame: .zero)
         
@@ -49,10 +49,11 @@ class MapCategoryButton: UIButton
         self.addAction(UIAction { [weak self] _ in self?.toggleButton() }, for: .touchUpInside)        
     }
     
+    // loads or removes annotations, then shows or hides sheet with result picker
     private func toggleButton()
     {
         self.isSelected.toggle()
-        root?.categoryPicker.haptics.selectionChanged()
+        map?.categoryPicker.haptics.selectionChanged()
         
         self.configuration?.baseBackgroundColor = self.isSelected ? .buttonSelected : .buttonUnselected
                 
@@ -60,15 +61,15 @@ class MapCategoryButton: UIButton
         {
             Task.detached()
             {
-                await self.root?.requestAnnotations(category: self.category, from: .apple)
-                await self.root?.requestAnnotations(category: self.category, from: .osm)
+                await self.map?.requestAnnotations(category: self.category, from: .apple)
+                await self.map?.requestAnnotations(category: self.category, from: .osm)
 
-                await self.root?.sheet.resultPicker.refresh()
+                await self.map?.sheet.resultPicker.refresh()
             }
         }
         else
         {
-            self.root?.removeAnnotations(category: self.category)
+            self.map?.removeAnnotations(category: self.category)
         }
     }
     

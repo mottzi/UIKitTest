@@ -140,7 +140,7 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
             
             if (0..<annotations.count).contains(page)
             {
-                root.selectAnnotation(annotations[page], ignore: true)
+                root.selectAnnotation(annotations[page]/*, ignore: true*/)
             }
         }
     }

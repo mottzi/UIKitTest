@@ -11,8 +11,6 @@ class MapView: UIViewController, MKMapViewDelegate
     let location: MapLocation = MapLocation()
 
     var lastPitch: CGFloat?
-    var ignoreMinimizeSheet: Bool? = true
-    var ignoreDelegate: Bool? = false
     
     override func viewDidLoad()
     {
