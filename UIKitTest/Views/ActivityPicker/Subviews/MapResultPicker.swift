@@ -94,12 +94,9 @@ class MapResultPicker: UIViewController
         {
             sheet.animateSheet(to: .hidden)
         }
-        else
+        else if sheet.state == .hidden
         {
-            if sheet.sheetState == .hidden
-            {
-                sheet.animateSheet(to: .minimized)
-            }
+            sheet.animateSheet(to: .minimized)
         }
     }
 }
@@ -134,7 +131,7 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
     {
         guard let root = parent?.parent as? ActivityPicker else { return }
         
-        if root.sheet.sheetState == .maximized
+        if root.sheet.state == .maximized
         {
             let page = Int(collection.contentOffset.x / collection.bounds.width)
             

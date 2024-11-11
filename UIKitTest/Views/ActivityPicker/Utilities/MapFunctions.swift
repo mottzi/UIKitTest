@@ -44,7 +44,7 @@ extension ActivityPicker
         categoryPicker.reset()
         controls.updateLocationButton(isMapCentered: false)
         
-        if sheet.sheetState == .maximized { sheet.animateSheet(to: .minimized) }
+        if sheet.state == .maximized { sheet.animateSheet(to: .minimized) }
         
         map.selectedAnnotations.forEach()
         {

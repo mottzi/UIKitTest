@@ -154,6 +154,29 @@ extension ActivityPicker
         
         sheet.resultPicker.lastSelectedAnnotation = annotation
     }
+    
+    // selects the annotation that corresponds to the currently selected POI in the result picker
+    func selectAnnotationOfResult()
+    {
+        if sheet.resultPicker.annotations.count > 0
+        {
+            let currentIndex = Int(sheet.resultPicker.collection.contentOffset.x / sheet.resultPicker.collection.bounds.width)
+            
+            if (0..<sheet.resultPicker.annotations.count).contains(currentIndex)
+            {
+                self.selectAnnotation(sheet.resultPicker.annotations[currentIndex])
+            }
+        }
+    }
+    
+    // deselects all currently selected annotations
+    func deselectAllSelectedAnnotations()
+    {
+        map.selectedAnnotations.forEach()
+        {
+            map.deselectAnnotation($0, animated: true)
+        }
+    }
 }
 
 // selection
@@ -170,7 +193,7 @@ extension ActivityPicker
         sheet.resultPicker.collection.setContentOffset(CGPoint(x: targetOffset, y: 0), animated: false)
         sheet.resultPicker.lastSelectedAnnotation = annotation
         
-        if sheet.sheetState != .maximized { sheet.animateSheet(to: .maximized) }
+        if sheet.state != .maximized { sheet.animateSheet(to: .maximized) }
     }
     
     // handle user deselection of an annotation
@@ -178,23 +201,14 @@ extension ActivityPicker
     {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
         {
-            let count = self.getVisibleAnnotations().count
-            
-            if count == 0
+            if self.getVisibleAnnotations().count == 0
             {
-                if self.sheet.sheetState != .hidden { self.sheet.animateSheet(to: .hidden) }
+                self.sheet.animateSheet(to: .hidden)
             }
-            else
+            else if self.map.selectedAnnotations.count == 0
             {
-                if self.sheet.sheetState != .minimized
-                {
-                    if self.map.selectedAnnotations.count == 0
-                    {
-                        self.sheet.animateSheet(to: .minimized)
-                    }
-                }
+                self.sheet.animateSheet(to: .minimized)
             }
-            
         }
     }
 }

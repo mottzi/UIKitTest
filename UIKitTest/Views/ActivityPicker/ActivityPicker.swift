@@ -25,6 +25,7 @@ class ActivityPicker: UIViewController, MKMapViewDelegate
         map.setup(parent: self)
         categoryPicker.setup(map: self)
         controls.setup(map: self)
+        sheet.setup(map: self)
     }
     
     private func setupView()

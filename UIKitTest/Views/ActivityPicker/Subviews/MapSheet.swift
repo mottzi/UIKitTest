@@ -7,6 +7,7 @@ enum SheetState: CGFloat
     case maximized = 190
     
     static let heightDelta: CGFloat = maximized.rawValue - minimized.rawValue
+    static let midPoint: CGFloat = (maximized.rawValue + minimized.rawValue) / 2
     
     static let cornerRadius: CGFloat = 0
     static let maxStretchHeight: CGFloat = 35
@@ -15,18 +16,12 @@ enum SheetState: CGFloat
 
 class MapSheet: UIViewController
 {
-    var sheetState: SheetState = .hidden
-    var sheetHeight: NSLayoutConstraint?
-    var sheetAnimator: UIViewPropertyAnimator?
-    lazy var sheetGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSheetGesture))
+    weak var map: ActivityPicker?
 
-    let sheetBlur: UIVisualEffectView =
-    {
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        return blurEffectView
-    }()
+    var state: SheetState = .hidden
+    var height: NSLayoutConstraint?
+    var animator: UIViewPropertyAnimator?
+    let gesture = UIPanGestureRecognizer()
     
     let resultPicker = MapResultPicker()
 
@@ -35,6 +30,27 @@ class MapSheet: UIViewController
         super.viewDidLoad()
         setupSheet()
         setupContent()
+    }
+    
+    private func setupSheet()
+    {
+        gesture.addTarget(self, action: #selector(handleSheetGesture))
+        
+        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(blurEffectView)
+        
+        view.addGestureRecognizer(gesture)
+        
+        view.layer.cornerRadius = SheetState.cornerRadius
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        blurEffectView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
     private func setupContent()
@@ -46,42 +62,56 @@ class MapSheet: UIViewController
         NSLayoutConstraint.activate([
             resultPicker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             resultPicker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            resultPicker.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            resultPicker.view.topAnchor.constraint(equalTo: view.topAnchor),
             resultPicker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
+        height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
 
         resultPicker.didMove(toParent: self)
     }
-
-    private func setupSheet()
-    {
-        view.addSubview(sheetBlur)
-        view.addGestureRecognizer(sheetGesture)
-
-        view.layer.cornerRadius = SheetState.cornerRadius
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        sheetBlur.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        sheetBlur.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        sheetBlur.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        sheetBlur.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
     
-    func constraints(active: Bool = true)
+    //
+    func animateSheet(to finalState: SheetState)
     {
-        guard let parentView = parent?.view else { return }
+        guard self.state != finalState else { return }
         
-        view.leadingAnchor.constraint(equalTo: parentView.leadingAnchor).isActive = true
-        view.trailingAnchor.constraint(equalTo: parentView.trailingAnchor).isActive = true
-        view.bottomAnchor.constraint(equalTo: parentView.bottomAnchor).isActive = true
+        animator?.stopAnimation(true)
         
-        sheetHeight = view.heightAnchor.constraint(equalToConstant: sheetState.rawValue)
-        sheetHeight?.isActive = true
+        var duration = 0.5
+        var damping = 0.6
+        
+        if self.state == .minimized && finalState == .hidden
+        {
+            duration = 1.0
+            damping = 1.0
+        }
+        else if self.state == .maximized && finalState == .hidden
+        {
+            duration = 1.2
+            damping = 1.0
+        }
+        else if self.state == .hidden && finalState == .minimized
+        {
+            duration = 1.0
+            damping = 1.0
+        }
+        
+        self.state = finalState
+                
+        animator = UIViewPropertyAnimator(duration: duration, dampingRatio: damping)
+        {
+            self.height?.constant = finalState.rawValue
+            self.view.setNeedsLayout()
+            self.parent?.view.layoutIfNeeded()
+        }
+
+        animator?.startAnimation()
     }
-    
+}
+
+extension MapSheet
+{
     @objc private func handleSheetGesture(_ gesture: UIPanGestureRecognizer)
     {
         let translation = gesture.translation(in: self.view)
@@ -99,23 +129,23 @@ class MapSheet: UIViewController
     
     private func handleGestureBegan()
     {
-        sheetAnimator?.stopAnimation(true)
+        animator?.stopAnimation(true)
         
-        let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
+        let currentHeight = height?.constant ?? SheetState.minimized.rawValue
         
         if currentHeight > (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
         {
-            sheetState = .maximized
+            state = .maximized
         }
         else
         {
-            sheetState = .minimized
+            state = .minimized
         }
     }
     
     private func handleGestureChanged(_ translation: CGPoint)
     {
-        var newHeight = sheetState.rawValue - translation.y
+        var newHeight = state.rawValue - translation.y
         
         if newHeight > SheetState.maximized.rawValue
         {
@@ -132,95 +162,43 @@ class MapSheet: UIViewController
             newHeight = max(SheetState.minimized.rawValue - SheetState.maxStretchHeight, newHeight)
         }
         
-        sheetHeight?.constant = newHeight
+        height?.constant = newHeight
     }
     
     private func handleGestureEnded(_ velocity: CGPoint)
     {
-        guard let root = parent as? ActivityPicker else { return }
+        let height = height?.constant ?? SheetState.minimized.rawValue
         
-        let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
-        let midPoint = (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
-        
-        let currentIndex = Int(resultPicker.collection.contentOffset.x / resultPicker.collection.bounds.width)
-        
-        if velocity.y > 500
-        {
-            animateSheet(to: .minimized)
-            
-            root.map.selectedAnnotations.forEach()
-            {
-                root.map.deselectAnnotation($0, animated: true)
-            }
-        }
-        else if velocity.y < -500
+        if velocity.y < -500 || height > SheetState.midPoint
         {
             animateSheet(to: .maximized)
-            
-            if resultPicker.annotations.count > 0
-            {
-                if (0..<resultPicker.annotations.count).contains(currentIndex)
-                {
-                    root.selectAnnotation(resultPicker.annotations[currentIndex])
-                }
-            }
-        }
-        else if currentHeight > midPoint
-        {
-            animateSheet(to: .maximized)
-            
-            if resultPicker.annotations.count > 0
-            {
-                if (0..<resultPicker.annotations.count).contains(currentIndex)
-                {
-                    root.selectAnnotation(resultPicker.annotations[currentIndex])
-                }
-            }
+            map?.selectAnnotationOfResult()
         }
         else
         {
             animateSheet(to: .minimized)
-            
-            root.map.selectedAnnotations.forEach()
-            {
-                root.map.deselectAnnotation($0, animated: true)
-            }
+            map?.deselectAllSelectedAnnotations()
         }
     }
-    
-    func animateSheet(to finalState: SheetState)
-    {
-        sheetAnimator?.stopAnimation(true)
-        
-        var duration = 0.5
-        var damping = 0.6
-        
-        if self.sheetState == .minimized && finalState == .hidden
-        {
-            duration = 1.0
-            damping = 1.0
-        }
-        else if self.sheetState == .maximized && finalState == .hidden
-        {
-            duration = 1.2
-            damping = 1.0
-        }
-        else if self.sheetState == .hidden && finalState == .minimized
-        {
-            duration = 1.0
-            damping = 1.0
-        }
-        
-        self.sheetState = finalState
-                
-        sheetAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: damping)
-        {
-            self.sheetHeight?.constant = finalState.rawValue
-            self.view.setNeedsLayout()
-            self.parent?.view.layoutIfNeeded()
-        }
+}
 
-        sheetAnimator?.startAnimation()
+extension MapSheet
+{
+    func setup(map: ActivityPicker)
+    {
+        self.map = map
+    }
+    
+    func constraints(active: Bool = true)
+    {
+        guard let map else { return }
+        
+        view.leadingAnchor.constraint(equalTo: map.view.leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: map.view.trailingAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: map.view.bottomAnchor).isActive = true
+        
+        height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
+        height?.isActive = true
     }
 }
 
