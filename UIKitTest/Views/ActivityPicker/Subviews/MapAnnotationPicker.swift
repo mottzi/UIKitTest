@@ -1,10 +1,12 @@
 import UIKit
 import MapKit
 
-class MapResultPicker: UIViewController
+class MapAnnotationPicker: UIViewController
 {
+    weak var map: ActivityPicker?
+
     var annotations: [MapAnnotation] = []
-    var currentAnnotationIds: Set<String> = []
+    var annotationIds: Set<String> = []
 
     lazy var collection: UICollectionView =
     {
@@ -21,7 +23,7 @@ class MapResultPicker: UIViewController
         collection.dataSource = self
         collection.showsHorizontalScrollIndicator = false
         collection.isPagingEnabled = true
-        collection.register(MapResultCard.self, forCellWithReuseIdentifier: "POICardCell")
+        collection.register(MapAnnotationCard.self, forCellWithReuseIdentifier: "POICardCell")
         return collection
     }()
     
@@ -43,24 +45,18 @@ class MapResultPicker: UIViewController
         ])
     }
     
-    // reloads POI cards using annotations that are visible on the map
+    // reloads annotation cards using annotations that are visible on the map
     func refresh()
     {
-        guard let root = parent?.parent as? ActivityPicker else { return }
+        guard let map else { return }
         
-        let newAnnotations = root.getVisibleAnnotations()
+        let newAnnotations = map.getVisibleAnnotations()
         let newAnnotationIds = Set(newAnnotations.compactMap { $0.identifier })
         
-        if newAnnotationIds != currentAnnotationIds
-        {
-            let cardIndex = Int(collection.contentOffset.x / collection.bounds.width)
-            var currentAnnotation: MapAnnotation?
-            
-            if (0..<annotations.count).contains(cardIndex)
-            {
-                currentAnnotation = annotations[cardIndex]
-            }
-            
+        if newAnnotationIds != annotationIds
+        {           
+            let currentAnnotation = getCurrentCardAnnotation()
+        
             // Sort new annotations, but prioritize current annotation if it exists
             self.annotations = newAnnotations.sorted()
             {
@@ -74,14 +70,38 @@ class MapResultPicker: UIViewController
                 return id1 < id2
             }
             
-            currentAnnotationIds = newAnnotationIds
+            annotationIds = newAnnotationIds
             
             // Reload and scroll to beginning
             collection.reloadData()
             collection.setContentOffset(.zero, animated: false)
         }
         
-        handleSheetAfterRefresh(sheet: root.sheet)
+        handleSheetAfterRefresh(sheet: map.sheet)
+    }
+    
+    // returns the index of the currently selected card
+    func getCurrentCardIndex() -> Int?
+    {
+        let index = Int(collection.contentOffset.x / collection.bounds.width)
+        
+        if (0..<annotations.count).contains(index)
+        {
+            return index
+        }
+        
+        return nil
+    }
+    
+    // returns the annotation associated with the currently selected card
+    func getCurrentCardAnnotation() -> MapAnnotation?
+    {
+        if let currentIndex = getCurrentCardIndex()
+        {
+            return annotations[currentIndex]
+        }
+        
+        return nil
     }
     
     // show or hide sheet after refresh
@@ -98,7 +118,15 @@ class MapResultPicker: UIViewController
     }
 }
 
-extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
+extension MapAnnotationPicker
+{
+    func setup(map: ActivityPicker?)
+    {
+        self.map = map
+    }
+}
+
+extension MapAnnotationPicker: UICollectionViewDelegate, UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
@@ -107,34 +135,21 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "POICardCell", for: indexPath) as! MapResultCard
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "POICardCell", for: indexPath) as! MapAnnotationCard
         cell.configure(with: annotations[indexPath.item])
         return cell
     }
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        handleScrollEnd()
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+    {
+        map?.selectAnotationOfCurrentCard()
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    {
         if !decelerate
         {
-            handleScrollEnd()
-        }
-    }
-    
-    func handleScrollEnd()
-    {
-        guard let root = parent?.parent as? ActivityPicker else { return }
-        
-        if root.sheet.state == .maximized
-        {
-            let page = Int(collection.contentOffset.x / collection.bounds.width)
-            
-            if (0..<annotations.count).contains(page)
-            {
-                root.map.selectAnnotation(annotations[page], animated: true)
-            }
+            map?.selectAnotationOfCurrentCard()
         }
     }
 }

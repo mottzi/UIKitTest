@@ -2,12 +2,12 @@ import UIKit
 
 class MapCategoryPicker: UIViewController
 {
-    public let haptics = UISelectionFeedbackGenerator()
-    
     weak var map: ActivityPicker?
     
-    let scrollview: UIScrollView = UIScrollView()
-    let stackview: UIStackView = UIStackView()
+    let scrollview = UIScrollView()
+    let stackview = UIStackView()
+    
+    let haptics = UISelectionFeedbackGenerator()
     
     override func viewDidLoad()
     {

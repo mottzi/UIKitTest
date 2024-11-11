@@ -1,6 +1,6 @@
 import UIKit
 
-class MapResultCard: UICollectionViewCell
+class MapAnnotationCard: UICollectionViewCell
 {
     private let icon: UIImageView =
     {

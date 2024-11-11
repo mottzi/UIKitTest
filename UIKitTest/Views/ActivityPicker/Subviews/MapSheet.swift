@@ -4,7 +4,7 @@ class MapSheet: UIViewController
 {
     weak var map: ActivityPicker?
     
-    let resultPicker = MapResultPicker()
+    let resultPicker = MapAnnotationPicker()
 
     var state: SheetState = .hidden
     var height: NSLayoutConstraint?
@@ -120,7 +120,7 @@ extension MapSheet
         if velocity.y < -500 || height > SheetState.midPoint
         {
             animateSheet(to: .maximized)
-            map?.selectAnnotationOfResult()
+            map?.selectAnotationOfCurrentCard()
         }
         else
         {
@@ -186,6 +186,7 @@ extension MapSheet
         height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
         
         resultPicker.didMove(toParent: self)
+        resultPicker.setup(map: map)
     }
 }
 

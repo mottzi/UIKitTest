@@ -143,17 +143,12 @@ extension ActivityPicker
     }
     
     // selects the annotation that corresponds to the currently selected POI in the result picker
-    func selectAnnotationOfResult()
+    func selectAnotationOfCurrentCard()
     {
-        if sheet.resultPicker.annotations.count > 0
-        {
-            let currentIndex = Int(sheet.resultPicker.collection.contentOffset.x / sheet.resultPicker.collection.bounds.width)
-            
-            if (0..<sheet.resultPicker.annotations.count).contains(currentIndex)
-            {
-                self.map.selectAnnotation(sheet.resultPicker.annotations[currentIndex], animated: true)
-            }
-        }
+        guard sheet.state == .maximized else { return }
+        guard let annotation = sheet.resultPicker.getCurrentCardAnnotation() else { return }
+        
+        map.selectAnnotation(annotation, animated: true)
     }
     
     // deselects all currently selected annotations
