@@ -32,50 +32,9 @@ class MapSheet: UIViewController
         setupContent()
     }
     
-    private func setupSheet()
-    {
-        gesture.addTarget(self, action: #selector(handleSheetGesture))
-        
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurEffectView)
-        
-        view.addGestureRecognizer(gesture)
-        
-        view.layer.cornerRadius = SheetState.cornerRadius
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        blurEffectView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
-    
-    private func setupContent()
-    {
-        addChild(resultPicker)
-        view.addSubview(resultPicker.view)
-        resultPicker.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            resultPicker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            resultPicker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            resultPicker.view.topAnchor.constraint(equalTo: view.topAnchor),
-            resultPicker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
-
-        resultPicker.didMove(toParent: self)
-    }
-    
-    //
+    // animates the sheet to the new state
     func animateSheet(to finalState: SheetState)
     {
-        guard self.state != finalState else { return }
-        
         animator?.stopAnimation(true)
         
         var duration = 0.5
@@ -127,6 +86,7 @@ extension MapSheet
         }
     }
     
+    // drag started: stop previous animation and initialize state
     private func handleGestureBegan()
     {
         animator?.stopAnimation(true)
@@ -143,6 +103,7 @@ extension MapSheet
         }
     }
     
+    // drag changed: calculate new sheet height based on gesture translation
     private func handleGestureChanged(_ translation: CGPoint)
     {
         var newHeight = state.rawValue - translation.y
@@ -165,6 +126,7 @@ extension MapSheet
         height?.constant = newHeight
     }
     
+    // drag ended: maximise or minimize sheet based on gesture end state
     private func handleGestureEnded(_ velocity: CGPoint)
     {
         let height = height?.constant ?? SheetState.minimized.rawValue
@@ -199,6 +161,45 @@ extension MapSheet
         
         height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
         height?.isActive = true
+    }
+    
+    private func setupSheet()
+    {
+        gesture.addTarget(self, action: #selector(handleSheetGesture))
+        
+        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(blurEffectView)
+        
+        view.addGestureRecognizer(gesture)
+        
+        view.layer.cornerRadius = SheetState.cornerRadius
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        blurEffectView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    private func setupContent()
+    {
+        addChild(resultPicker)
+        view.addSubview(resultPicker.view)
+        resultPicker.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            resultPicker.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            resultPicker.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            resultPicker.view.topAnchor.constraint(equalTo: view.topAnchor),
+            resultPicker.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        height = view.heightAnchor.constraint(equalToConstant: state.rawValue)
+        
+        resultPicker.didMove(toParent: self)
     }
 }
 
