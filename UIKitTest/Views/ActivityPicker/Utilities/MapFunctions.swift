@@ -1,6 +1,6 @@
 import MapKit
 
-extension MapView
+extension ActivityPicker
 {
     // centers map on the given location
     func centerMap(on location: CLLocation, radius: CLLocationDistance? = nil, animated: Bool = true)
@@ -35,7 +35,7 @@ extension MapView
     }
 }
 
-extension MapView
+extension ActivityPicker
 {
     // map camera began to move:
     // reset category picker and location button, minimize sheet, deselect annotations
@@ -77,4 +77,4 @@ extension MapView
     }
 }
 
-#Preview { MapView() }
+#Preview { ActivityPicker() }

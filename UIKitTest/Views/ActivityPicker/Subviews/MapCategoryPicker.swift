@@ -4,7 +4,7 @@ class MapCategoryPicker: UIViewController
 {
     public let haptics = UISelectionFeedbackGenerator()
     
-    weak var map: MapView?
+    weak var map: ActivityPicker?
     
     let scrollview: UIScrollView = UIScrollView()
     let stackview: UIStackView = UIStackView()
@@ -62,7 +62,7 @@ class MapCategoryPicker: UIViewController
 
 extension MapCategoryPicker
 {
-    func setup(map: MapView)
+    func setup(map: ActivityPicker)
     {
         self.map = map
         
@@ -72,7 +72,7 @@ extension MapCategoryPicker
     
     func constraints(activate: Bool = true)
     {
-        guard let map = self.parent as? MapView else { return }
+        guard let map = self.parent as? ActivityPicker else { return }
         
         self.view.leadingAnchor.constraint(equalTo: map.view.safeAreaLayoutGuide.leadingAnchor).isActive = activate
         self.view.trailingAnchor.constraint(equalTo: map.view.safeAreaLayoutGuide.trailingAnchor).isActive = activate
@@ -146,5 +146,5 @@ extension MapCategoryPicker
 
 #Preview
 {
-    MapView()
+    ActivityPicker()
 }

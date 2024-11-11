@@ -3,9 +3,9 @@ import MapKit
 
 class MapControls: UIViewController 
 {
-    weak var map: MapView?
+    weak var map: ActivityPicker?
     
-    func setup(map: MapView)
+    func setup(map: ActivityPicker)
     {
         self.map = map
         
@@ -137,5 +137,5 @@ class MapControls: UIViewController
 
 #Preview
 {
-    MapView()
+    ActivityPicker()
 }

@@ -5,9 +5,9 @@ class MapCategoryButton: UIButton
 {
     let category: MapCategory
     
-    weak var map: MapView?
+    weak var map: ActivityPicker?
     
-    init(category: MapCategory, root: MapView?)
+    init(category: MapCategory, root: ActivityPicker?)
     {
         self.category = category
         self.map = root
@@ -78,5 +78,5 @@ class MapCategoryButton: UIButton
 
 #Preview
 {
-    MapView()
+    ActivityPicker()
 }

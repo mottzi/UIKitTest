@@ -49,7 +49,7 @@ class MapResultPicker: UIViewController
     // reloads POI cards using annotations that are visible on the map
     func refresh()
     {
-        guard let root = parent?.parent as? MapView else { return }
+        guard let root = parent?.parent as? ActivityPicker else { return }
         
         let newAnnotations = root.getVisibleAnnotations()
         let newAnnotationIds = Set(newAnnotations.compactMap { $0.identifier })
@@ -132,7 +132,7 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
     
     func handleScrollEnd()
     {
-        guard let root = parent?.parent as? MapView else { return }
+        guard let root = parent?.parent as? ActivityPicker else { return }
         
         if root.sheet.sheetState == .maximized
         {
@@ -148,5 +148,5 @@ extension MapResultPicker: UICollectionViewDelegate, UICollectionViewDataSource
 
 #Preview
 {
-    MapView()
+    ActivityPicker()
 }

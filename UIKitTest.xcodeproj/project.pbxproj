@@ -15,7 +15,7 @@
 		9A37EC5A2CC90F5500621DC4 /* MapCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */; };
 		9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5B2CC9124100621DC4 /* MapCategory.swift */; };
 		9A37EC5E2CC91ADB00621DC4 /* UIAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */; };
-		9A37EC602CC93D4A00621DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5F2CC93D4A00621DC4 /* MapView.swift */; };
+		9A37EC602CC93D4A00621DC4 /* ActivityPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC5F2CC93D4A00621DC4 /* ActivityPicker.swift */; };
 		9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC612CC99EA600621DC4 /* UIView.swift */; };
 		9A37EC642CC9A6C800621DC4 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A37EC632CC9A6C800621DC4 /* UIFont.swift */; };
 		9A3A43832CCD7D84006AC114 /* legacy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9A3A43822CCD7D84006AC114 /* legacy.rtf */; };
@@ -24,6 +24,7 @@
 		9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61682A2CB8526F0011E756 /* SceneDelegate.swift */; };
 		9A6168322CB852700011E756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168312CB852700011E756 /* Assets.xcassets */; };
 		9A6168352CB852700011E756 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 9A6168342CB852700011E756 /* Base */; };
+		9A8976D32CE1EE820079A884 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8976D22CE1EE820079A884 /* GroupView.swift */; };
 		9A97298C2CDD73C500B1F430 /* MapResultPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A97298B2CDD73C500B1F430 /* MapResultPicker.swift */; };
 		9AA133D42CD25B760023EA25 /* AppleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA133D32CD25B760023EA25 /* AppleRequest.swift */; };
 		9AA32FE42CCEDECD00F4DA32 /* MapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */; };
@@ -41,7 +42,7 @@
 		9A37EC592CC90F5500621DC4 /* MapCategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategoryButton.swift; sourceTree = "<group>"; };
 		9A37EC5B2CC9124100621DC4 /* MapCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCategory.swift; sourceTree = "<group>"; };
 		9A37EC5D2CC91ADB00621DC4 /* UIAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAnimation.swift; sourceTree = "<group>"; };
-		9A37EC5F2CC93D4A00621DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		9A37EC5F2CC93D4A00621DC4 /* ActivityPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPicker.swift; sourceTree = "<group>"; };
 		9A37EC612CC99EA600621DC4 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		9A37EC632CC9A6C800621DC4 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		9A3A43822CCD7D84006AC114 /* legacy.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = legacy.rtf; sourceTree = "<group>"; };
@@ -52,6 +53,7 @@
 		9A6168312CB852700011E756 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A6168342CB852700011E756 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A6168362CB852700011E756 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A8976D22CE1EE820079A884 /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
 		9A97298B2CDD73C500B1F430 /* MapResultPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResultPicker.swift; sourceTree = "<group>"; };
 		9AA133D32CD25B760023EA25 /* AppleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRequest.swift; sourceTree = "<group>"; };
 		9AA32FE32CCEDECD00F4DA32 /* MapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControls.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				9ACDF6942CD5939500F1474D /* ActivityPicker */,
+				9A8976D22CE1EE820079A884 /* GroupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -159,7 +162,7 @@
 		9ACDF6942CD5939500F1474D /* ActivityPicker */ = {
 			isa = PBXGroup;
 			children = (
-				9A37EC5F2CC93D4A00621DC4 /* MapView.swift */,
+				9A37EC5F2CC93D4A00621DC4 /* ActivityPicker.swift */,
 				9AB3372A2CE12E8400AF1CAA /* Utilities */,
 				9AB3372B2CE13CB700AF1CAA /* Subviews */,
 			);
@@ -239,6 +242,7 @@
 			files = (
 				9AB99C692CD61A0800A0160E /* MapFunctions.swift in Sources */,
 				9AB3372D2CE13E2100AF1CAA /* MapResultCard.swift in Sources */,
+				9A8976D32CE1EE820079A884 /* GroupView.swift in Sources */,
 				9A1F03F02CD6B70500CFF5F9 /* OSMQuery.swift in Sources */,
 				9A1F03F12CD6B70500CFF5F9 /* OSMRequest.swift in Sources */,
 				9A37EC622CC99EA700621DC4 /* UIView.swift in Sources */,
@@ -247,7 +251,7 @@
 				9A97298C2CDD73C500B1F430 /* MapResultPicker.swift in Sources */,
 				9A1F03F32CD7865500CFF5F9 /* MapSheet.swift in Sources */,
 				9AA133D42CD25B760023EA25 /* AppleRequest.swift in Sources */,
-				9A37EC602CC93D4A00621DC4 /* MapView.swift in Sources */,
+				9A37EC602CC93D4A00621DC4 /* ActivityPicker.swift in Sources */,
 				9A6168292CB8526F0011E756 /* AppDelegate.swift in Sources */,
 				9A37EC5C2CC9124100621DC4 /* MapCategory.swift in Sources */,
 				9A61682B2CB8526F0011E756 /* SceneDelegate.swift in Sources */,

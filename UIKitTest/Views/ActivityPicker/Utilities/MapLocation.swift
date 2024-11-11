@@ -17,7 +17,7 @@ extension MapLocation
         self.requestLocation()
     }
     
-    func setup(map: MapView)
+    func setup(map: ActivityPicker)
     {
         self.map = map
         self.delegate = self
@@ -27,7 +27,7 @@ extension MapLocation
 
 class MapLocation: CLLocationManager, CLLocationManagerDelegate
 {
-    weak var map: MapView?
+    weak var map: ActivityPicker?
     var locationRequestReason: LocationRequestReason = .centerMapOnLaunch
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)

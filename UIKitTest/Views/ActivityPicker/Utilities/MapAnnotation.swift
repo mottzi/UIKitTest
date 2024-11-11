@@ -22,7 +22,7 @@ class MapAnnotation: MKPointAnnotation
     }
 }
 
-extension MapView
+extension ActivityPicker
 {
     // annotation provider
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView?
@@ -157,7 +157,7 @@ extension MapView
 }
 
 // selection
-extension MapView
+extension ActivityPicker
 {
     // handle user selection of an annotation
     func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation)
@@ -200,7 +200,7 @@ extension MapView
 }
 
 // API requests
-extension MapView
+extension ActivityPicker
 {
     enum MapRequestSource: String
     {
@@ -267,4 +267,4 @@ extension MapView
     }
 }
 
-#Preview { MapView() }
+#Preview { ActivityPicker() }

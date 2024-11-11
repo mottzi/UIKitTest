@@ -137,7 +137,7 @@ class MapSheet: UIViewController
     
     private func handleGestureEnded(_ velocity: CGPoint)
     {
-        guard let root = parent as? MapView else { return }
+        guard let root = parent as? ActivityPicker else { return }
         
         let currentHeight = sheetHeight?.constant ?? SheetState.minimized.rawValue
         let midPoint = (SheetState.maximized.rawValue + SheetState.minimized.rawValue) / 2
@@ -226,5 +226,5 @@ class MapSheet: UIViewController
 
 #Preview
 {
-    MapView()
+    ActivityPicker()
 }
