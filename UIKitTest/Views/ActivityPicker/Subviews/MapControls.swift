@@ -109,7 +109,12 @@ class MapControls: UIViewController
         compass.layer.shadowColor = UIColor.black.withAlphaComponent(0.35).cgColor
         compass.layer.shadowOpacity = 1
         compass.alpha = 0.9
-        compass.overrideUserInterfaceStyle = .light
+        
+        compass.backgroundColor = .systemBlue
+        compass.layer.cornerRadius = 45 / 2
+        compass.layer.masksToBounds = true
+        compass.clipsToBounds = true
+        compass.tintColor = .red
         return compass
     }()
     

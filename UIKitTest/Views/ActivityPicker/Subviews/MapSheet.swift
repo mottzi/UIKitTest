@@ -43,10 +43,13 @@ class MapSheet: UIViewController
         }
         
         self.state = finalState
+        
+        let finalOpacity = finalState == .maximized ? 1.0 : 0.0
                 
         animator = UIViewPropertyAnimator(duration: duration, dampingRatio: damping)
         {
             self.height?.constant = finalState.rawValue
+            self.map?.annotationControl.updateOpacity(finalOpacity)
             self.view.setNeedsLayout()
             self.parent?.view.layoutIfNeeded()
         }
@@ -108,6 +111,11 @@ extension MapSheet
             newHeight = SheetState.minimized.rawValue - resistedCompression
             newHeight = max(SheetState.minimized.rawValue - SheetState.maxStretchHeight, newHeight)
         }
+        
+        // Calculate opacity based on progress from midpoint to maximized state
+        let progress = (newHeight - SheetState.midPoint) / (SheetState.maximized.rawValue - SheetState.midPoint)
+        let opacity = min(max(progress, 0), 1) // Clamp between 0 and 1
+        map?.annotationControl.updateOpacity(opacity)
         
         height?.constant = newHeight
     }
